@@ -1,6 +1,5 @@
-// Cover art for one album: MusicBrainz + Cover Art Archive scan, falling back to Discogs.
-// Usage: import { getCover } from './fetch-cover.mjs'   or   node scripts/fetch-cover.mjs "converge jane doe"
-// Call once when an album is selected/added and store the URL; not per keystroke (MusicBrainz allows ~1 req/s, needs a User-Agent).
+// Cover art for one album: MusicBrainz + Cover Art Archive scan, fallback=Discogs.
+// Usage: import { getCover } from './fetch-cover.mjs' or node scripts/fetch-cover.mjs "converge jane doe"
 import { searchAlbums } from "./fetch-discogs.mjs";
 
 const headers = { "User-Agent": "tid-project/1.0", Accept: "application/json" };
@@ -26,7 +25,6 @@ export async function getCover({ id, cover }, { signal, size = 500 } = {}) {
   } catch (e) {
     if (e.name === "AbortError") throw e;
   }
-  // ponytail: no title search when the Discogs link is missing at MusicBrainz (loose match). Add if misses are common.
   return cover ?? null;
 }
 

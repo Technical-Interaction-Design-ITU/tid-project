@@ -1,13 +1,11 @@
-// Discogs album search. Query = album and/or artist; most popular (community "have") first.
-// Usage: import { searchAlbums } from './fetch-discogs.mjs'   or   node scripts/fetch-discogs.mjs "pink floyd"
-// Optional DISCOGS_TOKEN=... raises the limit from 25 to 60 req/min. Node only (keep the token server-side).
+// Discogs album search. Query = album and/or artist; most popular "have" first.
+// Usage: import { searchAlbums } from './fetch-discogs.mjs' or node scripts/fetch-discogs.mjs "pink floyd"
 const TOKEN = process.env.DISCOGS_TOKEN;
 const headers = {
   "User-Agent": "tid-project/1.0",
   ...(TOKEN && { Authorization: `Discogs token=${TOKEN}` }),
 };
 
-// Never sleeps: a search must answer fast, so a 429 is thrown and the caller decides (retry / local results).
 async function get(path, params, signal) {
   const res = await fetch(
     `https://api.discogs.com${path}?${new URLSearchParams(params)}`,
@@ -20,7 +18,7 @@ async function get(path, params, signal) {
   return res.json();
 }
 
-// Discogs names are messy: "The Pink Floyd*", "Artist (25)".
+// drops discogs weirdness "Artist (25)", "Artist*"
 const clean = (s) =>
   s
     .replace(/\s\(\d+\)/g, "")
@@ -37,7 +35,7 @@ const words = (s) =>
 export async function searchAlbums(query, { signal, limit = 20 } = {}) {
   query = query.trim();
   if (query.length < 2) return [];
-  // masters = one entry per album instead of 50 pressings
+  // master = one entry per album
   const { results } = await get(
     "/database/search",
     { q: query, type: "master", per_page: 100 },
@@ -59,13 +57,12 @@ export async function searchAlbums(query, { signal, limit = 20 } = {}) {
           url: `https://www.discogs.com${r.uri}`,
         };
       })
-      // q is full-text (tracklists, notes), so drop hits where the query isn't in "artist title" (word prefixes, accent-insensitive)
+      // query must be artist name or title
       .filter((a) =>
         words(query).every((w) =>
           words(`${a.artist} ${a.title}`).some((t) => t.startsWith(w)),
         ),
       )
-      // ponytail: only ranks Discogs' top 100 relevance hits, Discogs can't sort by popularity. Page further if albums go missing.
       .sort((a, b) => b.have - a.have)
       .slice(0, limit)
   );
