@@ -1,0 +1,3 @@
+/*
+    This contains the page for adding a new record to a record list.
+ */
