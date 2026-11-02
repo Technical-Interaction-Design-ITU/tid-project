@@ -1,0 +1,76 @@
+const records = [
+  {
+    id: 1,
+    pic: "/assets/thriller.jpg",
+    albumtitle: "Thriller",
+    artist: "Michael Jackson",
+    year: 1982,
+  },
+  {
+    id: 2,
+    pic: "/assets/abbey-road.jpg",
+    albumtitle: "Abbey Road",
+    artist: "The Beatles",
+    year: 1969,
+  },
+  {
+    id: 3,
+    pic: "/assets/dark-side-of-the-moon.jpg",
+    albumtitle: "The Dark Side of the Moon",
+    artist: "Pink Floyd",
+    year: 1973,
+  },
+  {
+    id: 4,
+    pic: "/assets/rumours.jpg",
+    albumtitle: "Rumours",
+    artist: "Fleetwood Mac",
+    year: 1977,
+  },
+  {
+    id: 5,
+    pic: "/assets/kind-of-blue.jpg",
+    albumtitle: "Kind of Blue",
+    artist: "Miles Davis",
+    year: 1959,
+  },
+  {
+    id: 6,
+    pic: "/assets/purple-rain.jpg",
+    albumtitle: "Purple Rain",
+    artist: "Prince",
+    year: 1984,
+  },
+  {
+    id: 7,
+    pic: "/assets/nevermind.jpg",
+    albumtitle: "Nevermind",
+    artist: "Nirvana",
+    year: 1991,
+  },
+  {
+    id: 8,
+    pic: "/assets/back-in-black.jpg",
+    albumtitle: "Back in Black",
+    artist: "AC/DC",
+    year: 1980,
+  },
+  {
+    id: 9,
+    pic: "/assets/led-zeppelin-iv.jpg",
+    albumtitle: "Led Zeppelin IV",
+    artist: "Led Zeppelin",
+    year: 1971,
+  },
+  {
+    id: 10,
+    pic: "/assets/random-access-memories.jpg",
+    albumtitle: "Random Access Memories",
+    artist: "Daft Punk",
+    year: 2013,
+  },
+];
+
+function RecordList() {
+  return <div></div>;
+}
