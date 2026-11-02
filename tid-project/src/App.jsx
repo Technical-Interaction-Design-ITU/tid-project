@@ -1,7 +1,8 @@
 import "./App.css";
+import RecordList from "./components/RecordList.jsx";
 
 function App() {
-  return <>Hello World</>;
+  return <RecordList />;
 }
 
 export default App;

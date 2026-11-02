@@ -1,10 +1,17 @@
 function Record({ record }) {
   return (
-    <div>
-      {record.pic}
-      {record.albumtitle}
-      {record.artist}
-    </div>
+    <li>
+      {record.pic ? (
+        <img src={record.pic} alt={`${record.albumtitle} cover`} />
+      ) : (
+        <div></div>
+      )}
+      <div>
+        <p>{record.albumtitle}</p>
+        <p>{record.artist}</p>
+        {record.year && <p>{record.year}</p>}
+      </div>
+    </li>
   );
 }
 

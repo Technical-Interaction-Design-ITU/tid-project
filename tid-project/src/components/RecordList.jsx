@@ -1,4 +1,6 @@
-const records = [
+import Record from "./Record.jsx";
+
+const testRecords = [
   {
     id: 1,
     pic: "/assets/thriller.jpg",
@@ -72,5 +74,13 @@ const records = [
 ];
 
 function RecordList() {
-  return <div></div>;
+  return (
+    <ul>
+      {testRecords.map((elem) => (
+        <Record key={elem.id} record={elem} />
+      ))}
+    </ul>
+  );
 }
+
+export default RecordList;
