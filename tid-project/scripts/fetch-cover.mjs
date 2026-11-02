@@ -1,5 +1,5 @@
 // Cover art for one album: MusicBrainz + Cover Art Archive scan, fallback=Discogs.
-// Usage: import { getCover } from './fetch-cover.mjs' or node scripts/fetch-cover.mjs "converge jane doe"
+// Usage: import { getCover } from './fetch-cover.mjs' or npm run cover -- <artist - album>
 import { searchAlbums } from "./fetch-discogs.mjs";
 
 const headers = { "User-Agent": "tid-project/1.0", Accept: "application/json" };

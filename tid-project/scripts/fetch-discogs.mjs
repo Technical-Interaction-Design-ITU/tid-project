@@ -1,5 +1,5 @@
 // Discogs album search. Query = album and/or artist; most popular "have" first.
-// Usage: import { searchAlbums } from './fetch-discogs.mjs' or node scripts/fetch-discogs.mjs "pink floyd"
+// Usage: import { searchAlbums } from './fetch-discogs.mjs' or npm run search -- <query>
 const TOKEN = process.env.DISCOGS_TOKEN;
 const headers = {
   "User-Agent": "tid-project/1.0",
