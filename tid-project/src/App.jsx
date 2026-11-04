@@ -1,7 +1,8 @@
 import "./App.css";
+import BottomNavi from "./components/BottomNav";
 
 function App() {
-  return <>Hello World</>;
+  return <BottomNavi />;
 }
 
 export default App;
