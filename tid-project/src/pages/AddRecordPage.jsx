@@ -1,32 +1,36 @@
 import { useState } from "react";
+import TextForm from "../components/TextForm";
 
-// this is copy of the new todo item page from to do list project
+export default function AddRecordPage({ onBack }) {
+  const [searchQuery, setSearchQuery] = useState("");
 
-export default function NewTodo({ onAdd }) {
-  const [text, setText] = useState("");
-
-  function handleSearch(event) {
-    // Add logic that makes an API call and renders result list
-  }
-
-  function handleAdd(event) {
-    // Add logic that adds the record to collection
+  function handleSearch(query) {
+    console.log("Searching for:", query);
+    setSearchQuery(query);
+    // Later: call the Discogs API here and store the results in state
   }
 
   return (
-    // back button
-
-    // search field:
-    <form onSubmit={handleSearch}>
-      {/* onSubmit fires both on button click and Enter key (both phone and keyboard)*/}
-      <input
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="New task"
-      />
-      <button className="button" disabled={text.trim().length === 0}>
-        Search
+    <div>
+      {/* back button */}
+      <button className="button" type="button" onClick={onBack}>
+        Back
       </button>
-    </form>
+
+      {/* search field */}
+      <TextForm
+        placeholder="Text search"
+        buttonLabel="Search"
+        onSubmit={handleSearch}
+        clearOnSubmit={false}
+      />
+
+      {/* results area */}
+      {searchQuery === "" ? (
+        <p>Search for a record to add</p>
+      ) : (
+        <p>Results for "{searchQuery}" will appear here</p>
+      )}
+    </div>
   );
 }
