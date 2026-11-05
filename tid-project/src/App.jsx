@@ -1,8 +1,8 @@
 import "./App.css";
-import SearchTestPage from "./pages/SearchTestPage.jsx";
+import RecordList from "./components/RecordList.jsx";
 
 function App() {
-  return <SearchTestPage />; // no router yet
+  return <RecordList />;
 }
 
 export default App;
