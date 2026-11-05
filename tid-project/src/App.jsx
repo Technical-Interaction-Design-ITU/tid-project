@@ -1,5 +1,11 @@
-import Home from "./pages/Home.jsx";
+import AppRoutes from "./routes.jsx";
+import BottomNav from "./components/BottomNav.jsx";
 
 export default function App() {
-  return <Home />;
+  return (
+    <>
+      <AppRoutes />
+      <BottomNav />
+    </>
+  );
 }
