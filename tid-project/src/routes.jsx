@@ -6,9 +6,9 @@ import Profile from "./pages/ProfilePage";
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<CollectionPage />} />
-      <Route path="/add" element={<AddPage />} />
-      <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/" element={<Collection />} />
+      <Route path="/add" element={<AddRecord />} />
+      <Route path="/profile" element={<Profile />} />
     </Routes>
   );
 }
