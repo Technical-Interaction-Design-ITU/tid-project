@@ -1,8 +1,8 @@
 import "./App.css";
-import RecordList from "./components/RecordList.jsx";
+import Home from "Home.jsx";
 
 function App() {
-  return <RecordList />;
+  return <Home />;
 }
 
 export default App;
