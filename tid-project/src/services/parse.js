@@ -11,7 +11,7 @@ if (!import.meta.env.VITE_PARSE_APP_ID) {
 Parse.serverURL = import.meta.env.VITE_PARSE_SERVER_URL;
 Parse.initialize(
   import.meta.env.VITE_PARSE_APP_ID,
-  import.meta.env.VITE_PARSE_JS_KEY,
+  import.meta.env.VITE_PARSE_JS_KEY
 );
 
 // every service imports Parse from here, so it is always initialised first

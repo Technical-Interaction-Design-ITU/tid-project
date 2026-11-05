@@ -43,28 +43,24 @@ export default function SignUpPage({ onAuthenticated }) {
         <input
           type="text"
           placeholder="Username"
-          autoComplete="username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
           type="email"
-          placeholder="Email (optional)"
-          autoComplete="email"
+          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
           type="password"
           placeholder="Password"
-          autoComplete="new-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
         <input
           type="password"
           placeholder="Confirm password"
-          autoComplete="new-password"
           value={confirm}
           onChange={(e) => setConfirm(e.target.value)}
         />
