@@ -40,4 +40,8 @@ const discogsApi = (mode) => ({
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => ({
   plugins: [react(), discogsApi(mode)],
+  resolve: {
+    // Parse's browser build imports Node's "events"; use the npm polyfill
+    alias: { events: "events/events.js" },
+  },
 }));
