@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
+import RecordList from "./components/RecordList.jsx";
 import AuthPage from "./pages/AuthPage.jsx";
 import Home from "./pages/Home.jsx";
+import SearchTestPage from "./pages/SearchTestPage.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
 import { currentUser, logOut } from "./services/authService.js";
 
@@ -46,6 +48,14 @@ function App() {
               <SignUpPage onAuthenticated={setUser} />
             )
           }
+        />
+        <Route
+          path="/records"
+          element={user ? <RecordList /> : <Navigate to="/auth" replace />}
+        />
+        <Route
+          path="/search-test"
+          element={user ? <SearchTestPage /> : <Navigate to="/auth" replace />}
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
