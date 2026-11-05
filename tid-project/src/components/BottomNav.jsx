@@ -1,44 +1,36 @@
 import * as React from "react";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import AlbumRoundedIcon from "@mui/icons-material/AlbumRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 
-export default function BottomNavi() {
-  const [value, setValue] = React.useState("collection");
+export default function BottomNav() {
+  const location = useLocation();
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-  //value og to kan først sættes når sider er routed
   return (
-    <BottomNavigation
-      sx={{ width: 500, backgroundColor: "" }}
-      value={value}
-      onChange={handleChange}
-    >
+    <BottomNavigation sx={{ width: 500 }} value={location.pathname}>
       <BottomNavigationAction
         label="Collection"
-        value="collectionpage"
+        value="/"
         icon={<AlbumRoundedIcon />}
         component={Link}
-        to="" //route
+        to="/"
       />
       <BottomNavigationAction
         label="Add"
-        value="addpage"
+        value="/add"
         icon={<AddRoundedIcon />}
         component={Link}
-        to="" //route
+        to="/add"
       />
       <BottomNavigationAction
         label="Profile"
-        value="profile"
+        value="/profile"
         icon={<PersonRoundedIcon />}
         component={Link}
-        to="" //route
+        to="/profile"
       />
     </BottomNavigation>
   );
