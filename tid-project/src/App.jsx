@@ -1,8 +1,8 @@
 import "./App.css";
-import RecordList from "./components/RecordList.jsx";
+import CollectionPage from "./pages/CollectionPage.jsx";
 
 function App() {
-  return <RecordList />;
+  return <CollectionPage />;
 }
 
 export default App;
