@@ -6,7 +6,7 @@ export default function SignUpPage({ onAuthenticated }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
+  const [confirmPassword, setConfirm] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -18,7 +18,11 @@ export default function SignUpPage({ onAuthenticated }) {
       setError("Username and password are required.");
       return;
     }
-    if (password !== confirm) {
+    if (!email.trim()) {
+      setError("Email is required.");
+      return;
+    }
+    if (password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
@@ -61,7 +65,7 @@ export default function SignUpPage({ onAuthenticated }) {
         <input
           type="password"
           placeholder="Confirm password"
-          value={confirm}
+          value={confirmPassword}
           onChange={(e) => setConfirm(e.target.value)}
         />
         <button type="submit" disabled={loading}>
