@@ -14,7 +14,11 @@ export default function BottomNavi() {
   };
   //value og to kan først sættes når sider er routed
   return (
-    <BottomNavigation sx={{ width: 500 }} value={value} onChange={handleChange}>
+    <BottomNavigation
+      sx={{ width: 500, backgroundColor: "" }}
+      value={value}
+      onChange={handleChange}
+    >
       <BottomNavigationAction
         label="Collection"
         value="collectionpage"
