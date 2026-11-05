@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "search": "node --env-file=.env.local scripts/fetch-discogs.mjs",
+    "cover": "node --env-file=.env.local scripts/fetch-cover.mjs"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
