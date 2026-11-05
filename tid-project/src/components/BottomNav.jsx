@@ -10,7 +10,10 @@ export default function BottomNav() {
   const location = useLocation();
 
   return (
-    <BottomNavigation sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }} value={location.pathname}>
+    <BottomNavigation
+      sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
+      value={location.pathname}
+    >
       <BottomNavigationAction
         label="Collection"
         value="/"
@@ -20,8 +23,7 @@ export default function BottomNav() {
       />
       <BottomNavigationAction
         label="Add"
-        value="/add"
-        icon={<AddRoundedIcon />}
+        icon={<AddRoundedIcon sx={{ color: "secondary.main" }} />}
         component={Link}
         to="/add"
       />
