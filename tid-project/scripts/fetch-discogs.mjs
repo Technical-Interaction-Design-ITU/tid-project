@@ -49,7 +49,7 @@ export async function searchAlbums(query, { signal, limit = 20 } = {}) {
           id: r.id,
           artist: clean(artist),
           title: title.join(" - ") || artist,
-          year: Number(r.year) || null,
+          year: r.year || null,
           thumb: r.thumb || null, // small: use in the dropdown
           cover: r.cover_image || r.thumb || null, // large: fallback in getCover()
           have: r.community?.have ?? 0,
