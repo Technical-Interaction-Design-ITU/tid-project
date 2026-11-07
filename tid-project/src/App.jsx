@@ -53,7 +53,10 @@ function App() {
           path="/collection"
           element={user ? <CollectionPage /> : <Navigate to="/auth" replace />}
         />
-        <Route path="/records" element={<Navigate to="/collection" replace />} />
+        <Route
+          path="/records"
+          element={<Navigate to="/collection" replace />}
+        />
         <Route
           path="/search-test"
           element={user ? <SearchTestPage /> : <Navigate to="/auth" replace />}
@@ -63,5 +66,3 @@ function App() {
     </BrowserRouter>
   );
 }
-
-export default App;
