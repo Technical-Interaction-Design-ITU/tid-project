@@ -1,7 +1,11 @@
-import "./App.css";
+import AppRoutes from "./routes.jsx";
+import BottomNav from "./components/BottomNav.jsx";
 
-function App() {
-  return <>Hello World</>;
+export default function App() {
+  return (
+    <>
+      <AppRoutes />
+      <BottomNav />
+    </>
+  );
 }
-
-export default App;

@@ -1,36 +1,21 @@
-import { useState } from "react";
-import TextForm from "../components/TextForm";
+import { useNavigate } from "react-router-dom";
+import Dialog from "@mui/material/Dialog";
+import IconButton from "@mui/material/IconButton";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
-export default function AddRecordPage({ onBack }) {
-  const [searchQuery, setSearchQuery] = useState("");
-
-  function handleSearch(query) {
-    console.log("Searching for:", query);
-    setSearchQuery(query);
-    // Later: call the Discogs API here and store the results in state
-  }
+// Full-screen overlay: sits above the bottom nav (MUI modal z-index).
+export default function AddRecord() {
+  const navigate = useNavigate();
+  const close = () => navigate("/");
 
   return (
-    <div>
-      {/* back button */}
-      <button className="button" type="button" onClick={onBack}>
-        Back
-      </button>
-
-      {/* search field */}
-      <TextForm
-        placeholder="Text search"
-        buttonLabel="Search"
-        onSubmit={handleSearch}
-        clearOnSubmit={false}
-      />
-
-      {/* results area */}
-      {searchQuery === "" ? (
-        <p>Search for a record to add</p>
-      ) : (
-        <p>Results for "{searchQuery}" will appear here</p>
-      )}
-    </div>
+    <Dialog fullScreen open onClose={close}>
+      <div style={{ padding: 24 }}>
+        <IconButton aria-label="Close" onClick={close}>
+          <CloseRoundedIcon />
+        </IconButton>
+        <h1> add record </h1>
+      </div>
+    </Dialog>
   );
 }
