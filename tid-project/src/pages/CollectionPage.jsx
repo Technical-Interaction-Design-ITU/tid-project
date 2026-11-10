@@ -1,6 +1,7 @@
 import RecordList from "../components/RecordList";
 import { testRecords } from "../data/testRecords.js";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 const titles = {
   hub: "Home",
@@ -9,6 +10,7 @@ const titles = {
 };
 
 function CollectionPage() {
+  const navigate = useNavigate();
   const [view, setView] = useState("hub");
   const records = view === "collection" ? testRecords : testRecords;
 
@@ -23,6 +25,9 @@ function CollectionPage() {
         <>
           <button onClick={() => setView("collection")}>My collection</button>
           <button onClick={() => setView("wantlist")}>Want list</button>
+          <div>
+            <button onClick={() => navigate("/new-crate")}>New crate</button>
+          </div>
         </>
       ) : (
         <>
