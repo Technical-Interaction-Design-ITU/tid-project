@@ -1,6 +1,8 @@
 import { createTheme } from "@mui/material/styles";
 
-// Palette from the design picture. Teal is mapped to `info` (MUI has no third brand slot).
+// Crates theme: palette (colours) and typography (fonts). Teal = primary, lime = secondary.
+const headingFont = '"Archivo", "Helvetica", "Arial", sans-serif';
+
 export default createTheme({
   disableRipple: true,
   palette: {
@@ -24,5 +26,13 @@ export default createTheme({
     },
     background: { default: "#101112", paper: "#1E2A2E" },
     text: { primary: "#FBE7D3", secondary: "#A4A4A3" },
+  },
+  typography: {
+    // Body text: Figtree. Headings: heavy, tight Archivo (Letterboxd-inspired).
+    fontFamily: '"Figtree", "Helvetica", "Arial", sans-serif',
+    h1: { fontFamily: headingFont, fontWeight: 800, letterSpacing: "-0.02em" },
+    h2: { fontFamily: headingFont, fontWeight: 800, letterSpacing: "-0.02em" },
+    h3: { fontFamily: headingFont, fontWeight: 800, letterSpacing: "-0.01em" },
+    button: { textTransform: "none", fontWeight: 600 },
   },
 });
