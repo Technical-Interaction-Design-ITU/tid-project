@@ -30,7 +30,7 @@ export default function NewCrate() {
   return (
     <Dialog fullScreen open onClose={close}>
       <div style={{ padding: 24 }}>
-        <IconButton aria-label="Close" onClick={close}>
+        <IconButton onClick={close}>
           <CloseRoundedIcon />
         </IconButton>
 
