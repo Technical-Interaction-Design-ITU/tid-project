@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { BrowserRouter } from "react-router";
+import Container from "@mui/material/Container";
 import "./App.css";
 import AppRoutes from "./routes.jsx";
 import BottomNav from "./components/BottomNav.jsx";
@@ -15,11 +16,14 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <AppRoutes
-        user={user}
-        onAuthenticated={setUser}
-        onLogOut={handleLogOut}
-      />
+      {/* Phone-width column, centred on bigger screens. Bottom padding clears the nav. */}
+      <Container maxWidth="sm" sx={{ pt: 3, pb: 12 }}>
+        <AppRoutes
+          user={user}
+          onAuthenticated={setUser}
+          onLogOut={handleLogOut}
+        />
+      </Container>
       {/* Outside <Routes> so it stays on every page — but only when logged in. */}
       {user && <BottomNav />}
     </BrowserRouter>

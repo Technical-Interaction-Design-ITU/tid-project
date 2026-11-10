@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
+import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import { logIn } from "../services/authService.js";
 
 export default function AuthPage({ onAuthenticated }) {
@@ -27,33 +33,35 @@ export default function AuthPage({ onAuthenticated }) {
   }
 
   return (
-    <div>
-      <h1>Log In</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <Stack spacing={3}>
+      <Typography variant="h1">Log In</Typography>
+      {error && <Alert severity="error">{error}</Alert>}
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Username"
+      <Stack component="form" onSubmit={handleSubmit} spacing={2}>
+        <TextField
+          label="Username"
           autoComplete="username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-        <input
+        <TextField
+          label="Password"
           type="password"
-          placeholder="Password"
           autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit" disabled={loading}>
+        <Button type="submit" size="large" disabled={loading}>
           Log In
-        </button>
-      </form>
+        </Button>
+      </Stack>
 
-      <p>
-        No account yet? <Link to="/signup">Sign up</Link>
-      </p>
-    </div>
+      <Typography color="text.secondary">
+        No account yet?{" "}
+        <Link component={RouterLink} to="/signup">
+          Sign up
+        </Link>
+      </Typography>
+    </Stack>
   );
 }

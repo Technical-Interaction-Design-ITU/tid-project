@@ -1,20 +1,72 @@
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import AlbumRoundedIcon from "@mui/icons-material/AlbumRounded";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
+
+const COVER = 88; // px
+
 function Record({ record, onAdd }) {
   return (
-    <li>
+    <Box
+      component="li"
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: 2,
+        p: 1.5,
+        bgcolor: "background.paper",
+        borderRadius: 1,
+        border: 1,
+        borderColor: "divider",
+      }}
+    >
       {record.pic ? (
-        <img src={record.pic} alt={`${record.albumtitle} cover`} />
+        <Box
+          component="img"
+          src={record.pic}
+          alt={`${record.albumtitle} by ${record.artist}`}
+          sx={{ width: COVER, height: COVER, flexShrink: 0, objectFit: "cover", borderRadius: 0.5 }}
+        />
       ) : (
-        <div className="no-cover"></div>
+        <Box
+          aria-hidden="true"
+          sx={{
+            width: COVER,
+            height: COVER,
+            flexShrink: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            bgcolor: "background.default",
+            borderRadius: 0.5,
+            color: "text.secondary",
+          }}
+        >
+          <AlbumRoundedIcon />
+        </Box>
       )}
-      <div>
-        <strong>{record.albumtitle}</strong>
-        <p>{record.artist}</p>
-        {record.year && <p>{record.year}</p>}
-      </div>
+
+      <Box sx={{ minWidth: 0, flex: 1 }}>
+        <Typography variant="subtitle1" noWrap>
+          {record.albumtitle}
+        </Typography>
+        <Typography variant="body2" color="text.secondary" noWrap>
+          {record.artist}
+          {record.year && ` · ${record.year}`}
+        </Typography>
+      </Box>
+
       {onAdd && (
-        <button onClick={() => onAdd(record.id)}>Add to collection</button>
+        <IconButton
+          color="secondary"
+          aria-label={`Add ${record.albumtitle} to collection`}
+          onClick={() => onAdd(record.id)}
+        >
+          <AddRoundedIcon />
+        </IconButton>
       )}
-    </li>
+    </Box>
   );
 }
 
