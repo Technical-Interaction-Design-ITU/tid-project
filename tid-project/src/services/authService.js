@@ -1,4 +1,5 @@
 import Parse from "./parse.js";
+import { createDefaultRecordLists } from "./recordListServices.js";
 
 // the user who is logged in, or null
 export function currentUser() {
@@ -17,6 +18,9 @@ export async function signUp(username, password, email) {
   acl.setPublicReadAccess(true);
   user.setACL(acl);
   await user.save();
+
+  // Create the two default recordLists: Collection and Want List
+  await createDefaultRecordLists();
 
   return user;
 }
