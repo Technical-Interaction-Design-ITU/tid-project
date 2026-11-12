@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useEffect, useState } from "react";
 import Record from "./Record.jsx";
 import { getRecordsInList } from "../services/recordListServices.js";
@@ -45,6 +46,11 @@ function RecordList({ listId, onAdd }) {
   if (error) return <p>Could not load records: {error}</p>;
   if (records.length === 0) return <p>No records in this list yet.</p>;
 
+=======
+import Record from "./Record.jsx";
+
+function RecordList({ records, onAdd }) {
+>>>>>>> dev
   return (
     <ul className="record-list">
       {records.map((elem) => (

@@ -1,5 +1,6 @@
 import RecordList from "../components/RecordList";
 import { testRecords } from "../data/testRecords.js";
+<<<<<<< HEAD
 import { getCrates } from "../services/recordListServices.js";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -7,11 +8,18 @@ import { useNavigate } from "react-router";
 // This page can render three different views:
 const titles = {
   home: "Home",
+=======
+import { useState } from "react";
+
+const titles = {
+  hub: "Home",
+>>>>>>> dev
   collection: "My Collection",
   wantlist: "My Wantlist",
 };
 
 function CollectionPage() {
+<<<<<<< HEAD
   const navigate = useNavigate();
   const [view, setView] = useState("home");
   const records = view === "collection" ? testRecords : testRecords;
@@ -30,6 +38,10 @@ function CollectionPage() {
     setSelectedCrate(crate);
     setView("crate");
   }
+=======
+  const [view, setView] = useState("hub");
+  const records = view === "collection" ? testRecords : testRecords;
+>>>>>>> dev
 
   function handleAdd(id) {
     console.log("Add to collection:", id);
@@ -37,6 +49,7 @@ function CollectionPage() {
 
   return (
     <>
+<<<<<<< HEAD
       <h1>
         {view === "crate" ? selectedCrate.get("list_name") : titles[view]}
       </h1>
@@ -65,6 +78,17 @@ function CollectionPage() {
       ) : (
         <>
           <button onClick={() => setView("home")}>Back</button>
+=======
+      <h1>{titles[view]}</h1>
+      {view === "hub" ? (
+        <>
+          <button onClick={() => setView("collection")}>My collection</button>
+          <button onClick={() => setView("wantlist")}>Want list</button>
+        </>
+      ) : (
+        <>
+          <button onClick={() => setView("hub")}>Back</button>
+>>>>>>> dev
           <RecordList
             records={records}
             onAdd={view === "wantlist" ? handleAdd : undefined}
