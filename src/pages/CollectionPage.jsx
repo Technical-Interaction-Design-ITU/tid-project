@@ -42,8 +42,8 @@ function CollectionPage() {
       </h1>
       {view === "home" ? (
         <>
-          <button onClick={() => setView("collection")}>My collection</button>
-          <button onClick={() => setView("wantlist")}>Want list</button>
+          <button onClick={() => setView("Collection")}>My collection</button>
+          <button onClick={() => setView("Wantlist")}>Want list</button>
 
           <h2>your crates: </h2>
 

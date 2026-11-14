@@ -1,6 +1,7 @@
 import Parse from "./parse.js";
 
 const RecordList = Parse.Object.extend("Record_List");
+const StoredIn = Parse.Object.extend("Stored_in");
 
 export const LIST_TYPES = ["collection", "wantList", "crate"];
 
@@ -36,6 +37,35 @@ export const getCrates = async () => {
     .find();
 };
 
+// Get the logged in user's collection or wantList (each user has exactly one of each)
+export const getDefaultList = async (type) => {
+  if (type !== "collection" && type !== "wantList") {
+    throw new Error(`"${type}" is not a default list type`);
+  }
+  const user = Parse.User.current();
+  if (!user) throw new Error("Must be logged in to read record lists");
+
+  const list = await new Parse.Query(RecordList)
+    .equalTo("user_id", user.id)
+    .equalTo("type", type)
+    .first();
+  if (!list) throw new Error(`No ${type} found for user ${user.id}`);
+  return list;
+};
+
+// Link a record to a list by creating a Stored_in row
+// recordId is the Record's objectId, recordListId is the list's list_id
+export const addToRecordList = async (recordId, recordListId) => {
+  const user = Parse.User.current();
+  if (!user) throw new Error("Must be logged in to add to a record list");
+
+  const link = new StoredIn();
+  link.set("record_id", recordId);
+  link.set("record_list_id", recordListId);
+  link.setACL(new Parse.ACL(user));
+  return await link.save();
+};
+
 // Get all records in a list, by looking them up in the Stored_in join table
 // listId is the list's list_id, record_id is the Record's objectId
 export const getRecordsInList = async (listId) => {
@@ -54,6 +84,6 @@ export const getRecordsInList = async (listId) => {
 export const createDefaultRecordLists = async () => {
   return await Promise.all([
     createRecordList("Collection", "collection"),
-    createRecordList("Want List", "wantList"),
+    createRecordList("WantList", "wantList"),
   ]);
 };
