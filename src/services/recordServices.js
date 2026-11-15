@@ -1,31 +1,48 @@
 import Parse from "./parse.js";
+import { addToRecordList } from "./recordListServices.js";
+import { testRecords } from "../data/testRecords.js";
 
 const Record = Parse.Object.extend("Record");
 
-// Saves a search result ({ id, artist, title, year, cover, thumb, ... }) as a private record of the logged-in user.
-export const saveRecord = async (album) => {
+// Create a new Record and link it to a recordList via Stored_in
+// recordData: { releaseCode, title, artistName }
+// recordList can be collection or wantList
+export const newRecord = async (recordData, recordList) => {
   const user = Parse.User.current();
-  if (!user) throw new Error("You must be logged in to add a record.");
+  if (!user) throw new Error("Must be logged in to create a record");
+  const acl = new Parse.ACL(user);
+
+  // (new records always start in the collection or the want list, never a crate)
+  const type = recordList?.get("type");
+  if (type !== "collection" && type !== "wantList") {
+    throw new Error(
+      `New records must go in a collection or wantList, got "${type}"`,
+    );
+  }
+
+  // Create the new record object
   const record = new Record();
-  record.set("release_code", String(album.id));
-  record.set("title", album.title);
-  record.set("artist_name", album.artist);
-  record.set("release_year", album.year ? Number(album.year) || undefined : undefined);
-  record.set("cover", album.cover || album.thumb);
-  record.set("owner", user);
-  record.setACL(new Parse.ACL(user));
-  console.log("Saving record:", record);
-  return await record.save();
+  record.set("release_code", String(recordData.releaseCode)); // releaseCode is a String
+  record.set("title", recordData.title);
+  record.set("artist_name", recordData.artistName);
+  record.setACL(acl);
+  await record.save();
+
+  // add it to recordList
+  try {
+    await addToRecordList(record.id, recordList.get("list_id"));
+  } catch (err) {
+    // Delete record if not in a list
+    await record.destroy();
+    throw err;
+  }
+  return record;
 };
 
-export const addRecordToList = async (recordData, list) => {
-  const record = new Record();
-  record.set("releaseCode", recordData.releaseCode);
-  record.set("title", recordData.title);
-  record.set("artistName", recordData.artistName);
-  record.set("label", recordData.label);
-  record.set("genre", recordData.genre);
-  record.set("list", list); // pointer: the list object itself, not its id
-  record.setACL(list.getACL()); // the record follows its list's permissions
-  return await record.save();
+// Add all test records to the given recordList
+// (newRecord only accepts a collection or wantList)
+export const addTestRecords = async (recordList) => {
+  return await Promise.all(
+    testRecords.map((recordData) => newRecord(recordData, recordList)),
+  );
 };
