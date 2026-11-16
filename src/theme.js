@@ -1,6 +1,11 @@
 import { createTheme } from "@mui/material/styles";
 
 // Palette from the design picture. Teal is mapped to `info` (MUI has no third brand slot).
+
+// NYT (A): font-konstanter, før createTheme
+const headingFont = '"Archivo", "Helvetica", "Arial", sans-serif';
+const bodyFont = '"Figtree", "Helvetica", "Arial", sans-serif';
+
 export default createTheme({
   disableRipple: true,
   palette: {
@@ -24,5 +29,30 @@ export default createTheme({
     },
     background: { default: "#101112", paper: "#1E2A2E" },
     text: { primary: "#FBE7D3", secondary: "#A4A4A3" },
+  },
+
+  // NYT (B): typografi, efter palette
+  typography: {
+    fontFamily: bodyFont,
+    h1: {
+      fontFamily: headingFont,
+      fontWeight: 800,
+      fontSize: "2rem",
+      letterSpacing: "-0.02em",
+    },
+    h2: {
+      fontFamily: headingFont,
+      fontWeight: 800,
+      fontSize: "1.5rem",
+      letterSpacing: "-0.02em",
+    },
+    h3: {
+      fontFamily: headingFont,
+      fontWeight: 800,
+      fontSize: "1.25rem",
+      letterSpacing: "-0.01em",
+    },
+    subtitle1: { fontWeight: 600, lineHeight: 1.3 },
+    button: { textTransform: "none", fontWeight: 600 },
   },
 });
