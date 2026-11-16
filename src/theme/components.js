@@ -20,6 +20,18 @@ export default {
     styleOverrides: {
       root: { minHeight: 44, minWidth: 44, paddingInline: 20 },
     },
+    // <Button variant="dashed">: an "add something" slot with a dashed outline.
+    variants: [
+      {
+        props: { variant: "dashed" },
+        style: ({ theme }) => ({
+          minHeight: 64,
+          color: theme.palette.text.primary,
+          border: `2px dashed ${theme.palette.text.secondary}`,
+          "&:hover": { borderColor: theme.palette.text.primary },
+        }),
+      },
+    ],
   },
   MuiIconButton: {
     styleOverrides: { root: { minHeight: 44, minWidth: 44 } },
