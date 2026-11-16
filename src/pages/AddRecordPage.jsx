@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
@@ -73,7 +74,7 @@ export default function AddRecordPage() {
         {selected && (
           <>
             <DialogContent>
-              <ul className="record-list">
+              <Box component="ul" sx={{ listStyle: "none", m: 0, p: 0 }}>
                 <Record
                   record={{
                     id: selected.id,
@@ -83,7 +84,7 @@ export default function AddRecordPage() {
                     cover: selected.cover,
                   }}
                 />
-              </ul>
+              </Box>
               {error && <p style={{ color: "crimson" }}>{error}</p>}
             </DialogContent>
             <DialogActions>

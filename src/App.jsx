@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { BrowserRouter } from "react-router";
-import "./App.css";
 import AppRoutes from "./routes.jsx";
 import Container from "@mui/material/Container";
 import BottomNav from "./components/BottomNav.jsx";

@@ -1,3 +1,12 @@
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import AlbumRoundedIcon from "@mui/icons-material/AlbumRounded";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import PlaylistAddRoundedIcon from "@mui/icons-material/PlaylistAddRounded";
+
+const COVER = 88; // px
+
 function Record({ record, onAddToCollection, onAddToCrate }) {
   // Try cover first (Parse.File), fall back to cover_url (Discogs URL)
   let coverUrl = null;
@@ -12,33 +21,86 @@ function Record({ record, onAddToCollection, onAddToCrate }) {
   }
 
   return (
-    <li>
+    <Box
+      component="li"
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: 2,
+        p: 1.5,
+        bgcolor: "background.paper",
+        borderRadius: 1,
+        border: 1,
+        borderColor: "divider",
+      }}
+    >
       {coverUrl ? (
-        <img 
-          src={coverUrl} 
-          alt={`${record.albumtitle} cover`}
+        <Box
+          component="img"
+          src={coverUrl}
+          alt={`${record.albumtitle} by ${record.artist}`}
           onError={(e) => {
             console.error("Failed to load cover image:", coverUrl);
             e.target.style.display = "none";
           }}
+          sx={{
+            width: COVER,
+            height: COVER,
+            flexShrink: 0,
+            objectFit: "cover",
+            borderRadius: 0.5,
+          }}
         />
       ) : (
-        <div className="no-cover"></div>
+        <Box
+          aria-hidden="true"
+          sx={{
+            width: COVER,
+            height: COVER,
+            flexShrink: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            bgcolor: "background.default",
+            borderRadius: 0.5,
+            color: "text.secondary",
+          }}
+        >
+          <AlbumRoundedIcon />
+        </Box>
       )}
-      <div>
-        <strong>{record.albumtitle}</strong>
-        <p>{record.artist}</p>
-        {record.year && <p>{record.year}</p>}
-      </div>
-      {/* button "add to collection" (handleAddToCollection), only shown in Wantlist view */}
+
+      <Box sx={{ minWidth: 0, flex: 1 }}>
+        <Typography variant="subtitle1" noWrap>
+          {record.albumtitle}
+        </Typography>
+        <Typography variant="body2" color="text.secondary" noWrap>
+          {record.artist}
+          {record.year && ` · ${record.year}`}
+        </Typography>
+      </Box>
+
+      {/* "add to collection" (handleAddToCollection), only shown in Wantlist view */}
       {onAddToCollection && (
-        <button onClick={() => onAddToCollection(record.id)}>Add to collection</button>
+        <IconButton
+          color="secondary"
+          aria-label={`Add ${record.albumtitle} to collection`}
+          onClick={() => onAddToCollection(record.id)}
+        >
+          <AddRoundedIcon />
+        </IconButton>
       )}
-      {/* button "add to crate" (opens AddToCrateDialog), only shown in Collection view */}
+      {/* "add to crate" (opens AddToCrateDialog), only shown in Collection view */}
       {onAddToCrate && (
-        <button onClick={() => onAddToCrate(record.id)}>Add to crate</button>
+        <IconButton
+          color="secondary"
+          aria-label={`Add ${record.albumtitle} to a crate`}
+          onClick={() => onAddToCrate(record.id)}
+        >
+          <PlaylistAddRoundedIcon />
+        </IconButton>
       )}
-    </li>
+    </Box>
   );
 }
 
