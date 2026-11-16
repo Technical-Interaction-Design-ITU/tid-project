@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import SearchBox from "../components/SearchBox.jsx";
 import Record from "../components/Record.jsx";
@@ -58,16 +63,22 @@ export default function AddRecordPage() {
 
   return (
     <Dialog fullScreen open onClose={close}>
-      <div style={{ padding: 24 }}>
-        <IconButton aria-label="Close" onClick={close}>
-          <CloseRoundedIcon />
-        </IconButton>
+      <Container>
+        <Stack spacing={3} sx={{ py: 3 }}>
+          <IconButton
+            aria-label="Close"
+            onClick={close}
+            sx={{ alignSelf: "flex-start" }}
+          >
+            <CloseRoundedIcon />
+          </IconButton>
 
-        <h1>Add record</h1>
+          <Typography variant="h1">Add record</Typography>
 
-        <SearchBox onSelect={handleSelect} />
-        {message && <p>{message}</p>}
-      </div>
+          <SearchBox onSelect={handleSelect} />
+          {message && <Alert severity="success">{message}</Alert>}
+        </Stack>
+      </Container>
 
       {/* Preview of the chosen album*/}
       <Dialog open={selected !== null} onClose={closeSelected}>
@@ -85,21 +96,26 @@ export default function AddRecordPage() {
                   }}
                 />
               </Box>
-              {error && <p style={{ color: "crimson" }}>{error}</p>}
+              {error && (
+                <Alert severity="error" sx={{ mt: 2 }}>
+                  {error}
+                </Alert>
+              )}
             </DialogContent>
             <DialogActions>
-              <button
-                disabled={saving}
-                onClick={() => addTo(getCollection, "collection")}
-              >
-                Add to collection
-              </button>
-              <button
+              <Button
+                variant="outlined"
                 disabled={saving}
                 onClick={() => addTo(getWantList, "want list")}
               >
                 Add to wantlist
-              </button>
+              </Button>
+              <Button
+                disabled={saving}
+                onClick={() => addTo(getCollection, "collection")}
+              >
+                Add to collection
+              </Button>
             </DialogActions>
           </>
         )}
