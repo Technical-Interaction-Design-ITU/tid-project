@@ -5,6 +5,7 @@ import Profile from "./pages/ProfilePage.jsx";
 import SearchTestPage from "./pages/SearchTestPage.jsx";
 import AuthPage from "./pages/AuthPage.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
+import NewCrate from "./pages/NewCrate.jsx";
 
 function NotFound() {
   return (
@@ -24,6 +25,7 @@ export default function AppRoutes({ user, onAuthenticated, onLogOut }) {
     <Routes>
       <Route path="/" element={requireUser(<Collection />)} />
       <Route path="/add" element={requireUser(<AddRecord />)} />
+      <Route path="/new-crate" element={requireUser(<NewCrate />)} />
       <Route
         path="/profile"
         element={requireUser(<Profile user={user} onLogOut={onLogOut} />)}
