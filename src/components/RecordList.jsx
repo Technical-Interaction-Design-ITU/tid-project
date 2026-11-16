@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import Record from "./Record.jsx";
 import { getRecordsInList } from "../services/recordListServices.js";
 
@@ -57,15 +60,33 @@ function RecordList({ listId, onAddToCollection, onAddToCrate }) {
   }, [listId]);
 
   // Error handeling
-  if (!listId) return <p>No records in this list yet.</p>;
-  if (loading) return <p>Loading records...</p>;
-  if (error) return <p>Could not load records: {error}</p>;
-  if (records.length === 0) return <p>No records in this list yet.</p>;
+  if (!listId)
+    return (
+      <Typography color="text.secondary">No records in this list yet.</Typography>
+    );
+  if (loading)
+    return <Typography color="text.secondary">Loading records...</Typography>;
+  if (error)
+    return <Alert severity="error">Could not load records: {error}</Alert>;
+  if (records.length === 0)
+    return (
+      <Typography color="text.secondary">No records in this list yet.</Typography>
+    );
 
   return (
     <>
-      {addError && <p style={{ color: "crimson" }}>{addError}</p>}
-      <ul className="record-list">
+      {addError && <Alert severity="error">{addError}</Alert>}
+      <Box
+        component="ul"
+        sx={{
+          listStyle: "none",
+          m: 0,
+          p: 0,
+          display: "flex",
+          flexDirection: "column",
+          gap: 1.5,
+        }}
+      >
         {records.map((elem) => (
           <Record
             key={elem.id}
@@ -74,7 +95,7 @@ function RecordList({ listId, onAddToCollection, onAddToCrate }) {
             onAddToCrate={onAddToCrate}
           />
         ))}
-      </ul>
+      </Box>
     </>
   );
 }
