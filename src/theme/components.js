@@ -52,4 +52,25 @@ export default {
       }),
     },
   },
+
+  // Bottom navigation
+  MuiBottomNavigation: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        height: 64,
+        backgroundColor: theme.palette.background.paper,
+        borderTop: `1px solid ${theme.palette.divider}`,
+      }),
+    },
+  },
+  MuiBottomNavigationAction: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        minWidth: 64,
+        color: theme.palette.text.secondary,
+        "&.Mui-selected": { color: theme.palette.primary.main },
+      }),
+      label: { fontWeight: 600 },
+    },
+  },
 };
