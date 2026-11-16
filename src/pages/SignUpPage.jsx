@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
+import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import { signUp } from "../services/authService.js";
 
 export default function SignUpPage({ onAuthenticated }) {
@@ -39,43 +45,49 @@ export default function SignUpPage({ onAuthenticated }) {
   }
 
   return (
-    <div>
-      <h1>Sign Up</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <Stack spacing={3}>
+      <Typography variant="h1">Sign Up</Typography>
+      {error && <Alert severity="error">{error}</Alert>}
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Username"
+      <Stack component="form" onSubmit={handleSubmit} spacing={2}>
+        <TextField
+          label="Username"
+          autoComplete="username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-        <input
+        <TextField
+          label="Email"
           type="email"
-          placeholder="Email"
+          autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <input
+        <TextField
+          label="Password"
           type="password"
-          placeholder="Password"
+          autoComplete="new-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <input
+        <TextField
+          label="Confirm password"
           type="password"
-          placeholder="Confirm password"
+          autoComplete="new-password"
           value={confirmPassword}
           onChange={(e) => setConfirm(e.target.value)}
         />
-        <button type="submit" disabled={loading}>
+        <Button type="submit" size="large" disabled={loading}>
           Create Account
-        </button>
-      </form>
+        </Button>
+      </Stack>
 
-      <p>
-        Already have an account? <Link to="/auth">Log in</Link>
-      </p>
-    </div>
+      <Typography color="text.secondary">
+        Already have an account?{" "}
+        <Link component={RouterLink} to="/auth">
+          Log in
+        </Link>
+      </Typography>
+    </Stack>
   );
 }
