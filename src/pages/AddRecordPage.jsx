@@ -42,6 +42,7 @@ export default function AddRecordPage() {
           releaseCode: selected.id,
           title: selected.title,
           artistName: selected.artist,
+          cover: selected.cover,
         },
         list,
       );
@@ -79,6 +80,7 @@ export default function AddRecordPage() {
                     albumtitle: selected.title,
                     artist: selected.artist,
                     year: selected.year,
+                    cover: selected.cover,
                   }}
                 />
               </ul>

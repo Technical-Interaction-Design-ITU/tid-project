@@ -5,8 +5,9 @@ import { testRecords } from "../data/testRecords.js";
 const Record = Parse.Object.extend("Record");
 
 // Create a new Record and link it to a recordList via Stored_in
-// recordData: { releaseCode, title, artistName }
+// recordData: { releaseCode, title, artistName, cover? }
 // recordList can be collection or wantList
+// Note: cover URL will be automatically fetched and uploaded by beforeSave hook in cloud/main.js
 export const newRecord = async (recordData, recordList) => {
   const user = Parse.User.current();
   if (!user) throw new Error("Must be logged in to create a record");
@@ -22,10 +23,17 @@ export const newRecord = async (recordData, recordList) => {
 
   // Create the new record object
   const record = new Record();
-  record.set("release_code", String(recordData.releaseCode)); // releaseCode is a String
+  record.set("release_code", String(recordData.releaseCode));
   record.set("title", recordData.title);
   record.set("artist_name", recordData.artistName);
   record.setACL(acl);
+  // Store cover URL - beforeSave hook will fetch and upload it as Parse.File
+  if (recordData.cover) {
+    console.log("Setting cover URL:", recordData.cover);
+    record.set("cover_url", recordData.cover);
+  }
+  record.set("release_year", recordData.releaseYear);
+  console.log("Saving record, beforeSave hook will handle cover upload");
   await record.save();
 
   // add it to recordList

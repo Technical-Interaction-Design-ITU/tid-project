@@ -9,7 +9,8 @@ function toRecordProps(record) {
     albumtitle: record.get("title"),
     artist: record.get("artist_name"),
     year: record.get("year"),
-    // pic: record.get("pic"),
+    cover: record.get("cover"),
+    cover_url: record.get("cover_url"), // Fallback URL from Discogs
   };
 }
 
