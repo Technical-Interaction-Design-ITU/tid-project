@@ -6,11 +6,12 @@
 import { createTheme } from "@mui/material/styles";
 import palette from "./palette.js";
 import typography from "./typography.js";
+import components from "./components.js";
 
 export default createTheme({
-  disableRipple: true,
   palette,
   typography,
   // Rounded corners everywhere (1 unit = 12px in `sx`, e.g. borderRadius: 1).
   shape: { borderRadius: 12 },
+  components,
 });
