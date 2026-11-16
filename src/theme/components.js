@@ -24,4 +24,32 @@ export default {
   MuiIconButton: {
     styleOverrides: { root: { minHeight: 44, minWidth: 44 } },
   },
+
+  // Text fields: full width, always a visible label, readable border.
+  MuiTextField: {
+    defaultProps: { variant: "outlined", fullWidth: true },
+  },
+  MuiOutlinedInput: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        backgroundColor: theme.palette.background.paper,
+        "& .MuiOutlinedInput-notchedOutline": {
+          borderColor: theme.palette.text.secondary,
+        },
+        "&:hover .MuiOutlinedInput-notchedOutline": {
+          borderColor: theme.palette.text.primary,
+        },
+      }),
+    },
+  },
+
+  // Surfaces: no lighter "elevation" overlay in dark mode, thin outline instead.
+  MuiPaper: { styleOverrides: { root: { backgroundImage: "none" } } },
+  MuiCard: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        border: `1px solid ${theme.palette.divider}`,
+      }),
+    },
+  },
 };
