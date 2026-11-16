@@ -53,11 +53,19 @@ export default {
     },
   },
 
+  // App width: one narrow, centred column on every screen size.
+  MuiContainer: {
+    defaultProps: { maxWidth: "sm" },
+  },
+
   // Bottom navigation
   MuiBottomNavigation: {
     styleOverrides: {
       root: ({ theme }) => ({
         height: 64,
+        // Same width as the page container (the `sm` breakpoint), centred.
+        maxWidth: theme.breakpoints.values.sm,
+        marginInline: "auto",
         backgroundColor: theme.palette.background.paper,
         borderTop: `1px solid ${theme.palette.divider}`,
       }),

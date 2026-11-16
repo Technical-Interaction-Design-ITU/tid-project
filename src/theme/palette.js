@@ -22,5 +22,5 @@ export default {
     dark: "#81501C",
   },
   background: { default: "#101112", paper: "#1E2A2E" },
-  text: { primary: "#FBE7D3", secondary: "#A4A4A3" },
+  text: { primary: "#ffffff", secondary: "#A4A4A3" },
 };
