@@ -13,6 +13,7 @@ import Typography from "@mui/material/Typography";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import SearchBox from "../components/SearchBox.jsx";
 import Record from "../components/Record.jsx";
+import Toast from "../components/Toast.jsx";
 import { newRecord } from "../services/recordServices.js";
 import { getCollection, getWantList } from "../services/recordListServices.js";
 
@@ -79,6 +80,13 @@ export default function AddRecordPage() {
           {message && <Alert severity="success">{message}</Alert>}
         </Stack>
       </Container>
+
+      {/* Confirmation toast after a record is saved */}
+      <Toast
+        open={message !== null}
+        message={message}
+        onClose={() => setMessage(null)}
+      />
 
       {/* Preview of the chosen album*/}
       <Dialog open={selected !== null} onClose={closeSelected}>
