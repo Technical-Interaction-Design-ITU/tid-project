@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router";
-import Collection from "./pages/CollectionPage.jsx";
+import HomePage from "./pages/HomePage.jsx";
 import AddRecord from "./pages/AddRecordPage.jsx";
 import Profile from "./pages/ProfilePage.jsx";
 import SearchTestPage from "./pages/SearchTestPage.jsx";
@@ -23,7 +23,7 @@ export default function AppRoutes({ user, onAuthenticated, onLogOut }) {
 
   return (
     <Routes>
-      <Route path="/" element={requireUser(<Collection />)} />
+      <Route path="/" element={requireUser(<HomePage />)} />
       <Route path="/add" element={requireUser(<AddRecord />)} />
       <Route path="/new-crate" element={requireUser(<NewCrate />)} />
       <Route

@@ -1,4 +1,9 @@
+import Alert from "@mui/material/Alert";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import RecordList from "../components/RecordList";
+import HomeView from "../components/HomeView.jsx";
+import BackButton from "../components/BackButton.jsx";
 import AddToCrateDialog from "./AddToCrateDialog.jsx";
 import {
   getCrates,
@@ -16,7 +21,7 @@ const titles = {
   wantlist: "My Wantlist",
 };
 
-function CollectionPage() {
+function HomePage() {
   const navigate = useNavigate();
   const [view, setView] = useState("home");
   const [crates, setCrates] = useState([]);
@@ -70,49 +75,40 @@ function CollectionPage() {
   }
 
   return (
-    <>
-      <h1>
+    <Stack spacing={2}>
+      <Typography variant="h1">
         {view === "crate" ? selectedCrate.get("list_name") : titles[view]}
-      </h1>
+      </Typography>
       {view === "home" ? (
-        <>
-          <button onClick={() => setView("collection")}>My collection</button>
-          <button onClick={() => setView("wantlist")}>Want list</button>
-
-          <h2>your crates: </h2>
-
-          <div>
-            <button onClick={() => navigate("/new-crate")}>New crate</button>
-          </div>
-
-          {crates.map((crate) => (
-            <button key={crate.id} onClick={() => openCrate(crate)}>
-              {crate.get("list_name")}
-            </button>
-          ))}
-        </>
+        <HomeView
+          crates={crates}
+          onOpenCollection={() => setView("collection")}
+          onOpenWantlist={() => setView("wantlist")}
+          onOpenCrate={openCrate}
+          onNewCrate={() => navigate("/new-crate")}
+        />
       ) : view === "crate" ? (
         <>
-          <button onClick={() => setView("home")}>Back</button>
+          <BackButton onClick={() => setView("home")} />
           <RecordList listId={selectedCrate.get("list_id")} />
         </>
       ) : (
         <>
-          <button onClick={() => setView("home")}>Back</button>
+          <BackButton onClick={() => setView("home")} />
           {listError ? (
-            <p>Could not load list: {listError}</p>
+            <Alert severity="error">Could not load list: {listError}</Alert>
           ) : !currentList ? (
-            <p>Loading records...</p>
+            <Typography color="text.secondary">Loading records...</Typography>
           ) : (
             <RecordList
               listId={currentList.get("list_id")}
-              onAddToCollection={view === "wantlist" ? handleAddToCollection : undefined}
-              onAddToCrate={
-                view === "collection" ? openAddToCrate : undefined
+              onAddToCollection={
+                view === "wantlist" ? handleAddToCollection : undefined
               }
+              onAddToCrate={view === "collection" ? openAddToCrate : undefined}
             />
           )}
-          {crateMessage && <p>{crateMessage}</p>}
+          {crateMessage && <Alert severity="success">{crateMessage}</Alert>}
           <AddToCrateDialog
             recordId={recordForCrate}
             onClose={() => setRecordForCrate(null)}
@@ -123,8 +119,8 @@ function CollectionPage() {
           />
         </>
       )}
-    </>
+    </Stack>
   );
 }
 
-export default CollectionPage;
+export default HomePage;

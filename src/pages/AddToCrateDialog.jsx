@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
+import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import Typography from "@mui/material/Typography";
 import {
   getCrates,
   addToRecordList,
@@ -64,24 +70,38 @@ export default function AddToCrateDialog({ recordId, onClose, onAdded }) {
   }
 
   return (
-    <Dialog open={open} onClose={close}>
+    <Dialog open={open} onClose={close} fullWidth maxWidth="xs">
       <DialogTitle>Add to crate</DialogTitle>
       <DialogContent>
-        {crates === null && !error && <p>Loading crates...</p>}
-        {crates?.length === 0 && <p>You have no crates yet.</p>}
-        {crates?.map((crate) => (
-          <div key={crate.id}>
-            <button disabled={saving} onClick={() => addToCrate(crate)}>
-              {crate.get("list_name")}
-            </button>
-          </div>
-        ))}
-        {error && <p style={{ color: "crimson" }}>{error}</p>}
+        {crates === null && !error && (
+          <Typography color="text.secondary">Loading crates...</Typography>
+        )}
+        {crates?.length === 0 && (
+          <Typography color="text.secondary">
+            You have no crates yet.
+          </Typography>
+        )}
+        <List disablePadding>
+          {crates?.map((crate) => (
+            <ListItemButton
+              key={crate.id}
+              disabled={saving}
+              onClick={() => addToCrate(crate)}
+            >
+              <ListItemText primary={crate.get("list_name")} />
+            </ListItemButton>
+          ))}
+        </List>
+        {error && (
+          <Alert severity="error" sx={{ mt: 2 }}>
+            {error}
+          </Alert>
+        )}
       </DialogContent>
       <DialogActions>
-        <button disabled={saving} onClick={close}>
+        <Button variant="text" disabled={saving} onClick={close}>
           Cancel
-        </button>
+        </Button>
       </DialogActions>
     </Dialog>
   );
