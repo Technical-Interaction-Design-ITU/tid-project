@@ -32,7 +32,7 @@ export const newRecord = async (recordData, recordList) => {
     console.log("Setting cover URL:", recordData.cover);
     record.set("cover_url", recordData.cover);
   }
-  record.set("release_year", recordData.releaseYear);
+  record.set("release_year", recordData.year);
   console.log("Saving record, beforeSave hook will handle cover upload");
   await record.save();
 
