@@ -1,5 +1,4 @@
 name: Deploy Vite site
-
 on:
   push:
     branches: [dev]
@@ -25,9 +24,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-          cache-dependency-path: webpage/webpage/package-lock.json
-      - run: npm ci
+      - run: npm install
         working-directory: webpage/webpage
       - run: npm run build
         working-directory: webpage/webpage
@@ -37,3 +34,4 @@ jobs:
           path: webpage/webpage/dist
       - id: deployment
         uses: actions/deploy-pages@v4
+
