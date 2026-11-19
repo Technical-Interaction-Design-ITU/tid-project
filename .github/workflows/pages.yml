@@ -1,4 +1,5 @@
 name: Deploy Vite site
+
 on:
   push:
     branches: [dev]
@@ -24,14 +25,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm install
-        working-directory: webpage/webpage
+          cache: npm
+      - run: npm ci
       - run: npm run build
-        working-directory: webpage/webpage
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: webpage/webpage/dist
+          path: dist
       - id: deployment
         uses: actions/deploy-pages@v4
-
