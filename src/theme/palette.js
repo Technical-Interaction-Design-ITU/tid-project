@@ -21,6 +21,28 @@ export default {
     main: "#FBE7D3",
     dark: "#81501C",
   },
-  background: { default: "#101112", paper: "#1E2A2E" },
-  text: { primary: "#ffffff", secondary: "#A4A4A3" },
+
+  // Alert / Toast severity colours
+  // I left out light and dark, Mui apparently auto generates these based on main.
+  success: {
+    main: "#52A0B2",
+    contrastText: "#ffffff",
+  },
+  error: {
+    main: "#FBE7D3",
+    contrastText: "#1D1B19",
+  },
+  warning: {
+    main: "#FBE7D3",
+    contrastText: "#1D1B19",
+  },
+
+  background: {
+    default: "#101112",
+    paper: "#1E2A2E",
+  },
+  text: {
+    primary: "#ffffff",
+    secondary: "#A4A4A3",
+  },
 };

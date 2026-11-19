@@ -77,7 +77,6 @@ export default function AddRecordPage() {
           <Typography variant="h1">Add record</Typography>
 
           <SearchBox onSelect={handleSelect} />
-          {message && <Alert severity="success">{message}</Alert>}
         </Stack>
       </Container>
 
