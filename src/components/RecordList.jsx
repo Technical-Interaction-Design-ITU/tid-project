@@ -3,6 +3,7 @@ import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Record from "./Record.jsx";
+import ConfirmDeleteDialog from "./ConfirmDeleteDialog.jsx";
 import { getRecordsInList } from "../services/recordListServices.js";
 
 // Turn a Parse Record object into the shape the Record component expects
@@ -18,27 +19,39 @@ function toRecordProps(record) {
 }
 
 // Shows all records stored in the list with the given listId (via Stored_in)
-// onAddToCollection(id, record): moves a record out of this list (it is removed from the screen)
+// onAddToCollection(id, record): moves a record out of this list 
 // onAddToCrate: adds a record to a crate as well (it stays in this list)
-function RecordList({ listId, onAddToCollection, onAddToCrate }) {
+// onDelete(id, record): deletes a record from all lists, after ConfirmDeleteDialog
+// onRemove(id, record): removes a record from this list only, no confirmation
+function RecordList({ listId, onAddToCollection, onAddToCrate, onDelete, onRemove }) {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [addError, setAddError] = useState(null);
+  const [actionError, setActionError] = useState(null);
+  const [recordToDelete, setRecordToDelete] = useState(null); // record while ConfirmDeleteDialog is open
 
-  // run onAddToCollection, then remove the record from this list on screen
-  async function handleAddToCollection(id) {
-    setAddError(null);
+  const findRecord = (id) => records.find((r) => r.id === id);
+  const removeFromScreen = (id) =>
+    setRecords((prev) => prev.filter((r) => r.id !== id));
+
+  // run an action that takes the record out of this list (onAddToCollection / onRemove),
+  // then remove it from the screen. The record is passed along, so the parent
+  // can use the album title in a confirmation toast.
+  async function runAndRemove(action, id) {
+    setActionError(null);
     try {
-      // pass the record along, so the parent can use the album title in a confirmation
-      await onAddToCollection(
-        id,
-        records.find((r) => r.id === id),
-      );
-      setRecords((prev) => prev.filter((r) => r.id !== id));
+      await action(id, findRecord(id));
+      removeFromScreen(id);
     } catch (err) {
-      setAddError(err.message);
+      setActionError(err.message);
     }
+  }
+
+  // called by ConfirmDeleteDialog; errors are shown in the dialog
+  async function confirmDelete() {
+    await onDelete(recordToDelete.id, recordToDelete);
+    removeFromScreen(recordToDelete.id);
+    setRecordToDelete(null);
   }
 
   useEffect(() => {
@@ -79,7 +92,7 @@ function RecordList({ listId, onAddToCollection, onAddToCrate }) {
 
   return (
     <>
-      {addError && <Alert severity="error">{addError}</Alert>}
+      {actionError && <Alert severity="error">{actionError}</Alert>}
       <Box
         component="ul"
         sx={{
@@ -95,11 +108,26 @@ function RecordList({ listId, onAddToCollection, onAddToCrate }) {
           <Record
             key={elem.id}
             record={elem}
-            onAddToCollection={onAddToCollection ? handleAddToCollection : undefined}
+            onAddToCollection={
+              onAddToCollection
+                ? (id) => runAndRemove(onAddToCollection, id)
+                : undefined
+            }
             onAddToCrate={onAddToCrate}
+            onDelete={
+              onDelete ? (id) => setRecordToDelete(findRecord(id)) : undefined
+            }
+            onRemove={onRemove ? (id) => runAndRemove(onRemove, id) : undefined}
           />
         ))}
       </Box>
+      {onDelete && (
+        <ConfirmDeleteDialog
+          record={recordToDelete}
+          onCancel={() => setRecordToDelete(null)}
+          onConfirm={confirmDelete}
+        />
+      )}
     </>
   );
 }

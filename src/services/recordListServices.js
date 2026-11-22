@@ -105,6 +105,48 @@ export const getRecordsInList = async (listId) => {
     .find();
 };
 
+// Get the logged in user's crates that a record is stored in
+// (used to warn before deleting: "it is also in your crates ...")
+export const getCratesForRecord = async (recordId) => {
+  const [crates, links] = await Promise.all([
+    getCrates(),
+    new Parse.Query(StoredIn).equalTo("record_id", recordId).find(),
+  ]);
+  const listIds = new Set(links.map((link) => link.get("record_list_id")));
+  return crates.filter((crate) => listIds.has(crate.get("list_id")));
+};
+
+// Delete a record from ALL of the logged in user's lists (collection/wantList and crates)
+// Only the Stored_in rows are deleted. The record rows are kept
+export const deleteRecordFromLists = async (recordId) => {
+  const user = Parse.User.current();
+  if (!user) throw new Error("Must be logged in to delete a record");
+
+  // only touch links in this user's own lists
+  const lists = await new Parse.Query(RecordList)
+    .equalTo("user_id", user.id)
+    .find();
+  const links = await new Parse.Query(StoredIn)
+    .equalTo("record_id", recordId)
+    .containedIn(
+      "record_list_id",
+      lists.map((list) => list.get("list_id")),
+    )
+    .find();
+  return await Parse.Object.destroyAll(links);
+};
+
+// Remove a record from one a crate by deleting its Stored_in row
+// The record stays in the user's other crates and collection list
+export const removeFromRecordList = async (recordId, recordListId) => {
+  const link = await new Parse.Query(StoredIn)
+    .equalTo("record_id", recordId)
+    .equalTo("record_list_id", recordListId)
+    .first();
+  if (!link) throw new Error(`Record ${recordId} is not in list ${recordListId}`);
+  return await link.destroy();
+};
+
 // Create collection and wantList for new sign up
 // (Can be deleted at a later point)
 export const createDefaultRecordLists = async () => {

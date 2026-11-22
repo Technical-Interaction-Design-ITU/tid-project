@@ -3,11 +3,15 @@ import Typography from "@mui/material/Typography";
 import AlbumRoundedIcon from "@mui/icons-material/AlbumRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import PlaylistAddRoundedIcon from "@mui/icons-material/PlaylistAddRounded";
+import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutlineRounded";
 import LabeledIconButton from "./LabeledIconButton.jsx";
 
 const COVER = 88; // px
 
-function Record({ record, onAddToCollection, onAddToCrate }) {
+// onDelete: Wantlist / Collection view, deletes from all the user's lists (asks first)
+// onRemove: Crate view, removes from this crate only
+function Record({ record, onAddToCollection, onAddToCrate, onDelete, onRemove }) {
   // Try cover first (Parse.File), fall back to cover_url (Discogs URL)
   let coverUrl = null;
 
@@ -80,24 +84,47 @@ function Record({ record, onAddToCollection, onAddToCrate }) {
         </Typography>
       </Box>
 
-      {/* "add to collection" (handleAddToCollection), only shown in Wantlist view */}
-      {onAddToCollection && (
-        <LabeledIconButton
-          icon={<AddRoundedIcon />}
-          label="Add to collection"
-          ariaLabel={`Add to collection: ${record.albumtitle}`}
-          onClick={() => onAddToCollection(record.id)}
-        />
-      )}
-      {/* "add to crate" (opens AddToCrateDialog), only shown in Collection view */}
-      {onAddToCrate && (
-        <LabeledIconButton
-          icon={<PlaylistAddRoundedIcon />}
-          label="Add to crate"
-          ariaLabel={`Add to crate: ${record.albumtitle}`}
-          onClick={() => onAddToCrate(record.id)}
-        />
-      )}
+      {/* Action buttons, grouped closer together than the rest of the row */}
+      <Box sx={{ display: "flex", gap: 0.5, flexShrink: 0 }}>
+        {/* "add to collection" (handleAddToCollection), only shown in Wantlist view */}
+        {onAddToCollection && (
+          <LabeledIconButton
+            icon={<AddRoundedIcon />}
+            label="Add to collection"
+            ariaLabel={`Add to collection: ${record.albumtitle}`}
+            onClick={() => onAddToCollection(record.id)}
+          />
+        )}
+        {/* "add to crate" (opens AddToCrateDialog), only shown in Collection view */}
+        {onAddToCrate && (
+          <LabeledIconButton
+            icon={<PlaylistAddRoundedIcon />}
+            label="Add to crate"
+            ariaLabel={`Add to crate: ${record.albumtitle}`}
+            onClick={() => onAddToCrate(record.id)}
+          />
+        )}
+        {/* "delete" (opens ConfirmDeleteDialog), shown in Wantlist and Collection view */}
+        {onDelete && (
+          <LabeledIconButton
+            icon={<DeleteRoundedIcon />}
+            label="Delete"
+            color="error"
+            ariaLabel={`Delete: ${record.albumtitle}`}
+            onClick={() => onDelete(record.id)}
+          />
+        )}
+        {/* "remove" (from this crate only), shown in Crate view */}
+        {onRemove && (
+          <LabeledIconButton
+            icon={<RemoveCircleOutlineRoundedIcon />}
+            label="Remove"
+            color="error"
+            ariaLabel={`Remove: ${record.albumtitle}`}
+            onClick={() => onRemove(record.id)}
+          />
+        )}
+      </Box>
     </Box>
   );
 }

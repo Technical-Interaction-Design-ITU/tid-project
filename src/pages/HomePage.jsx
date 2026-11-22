@@ -11,6 +11,8 @@ import {
   getCollection,
   getWantList,
   moveToRecordList,
+  deleteRecordFromLists,
+  removeFromRecordList,
 } from "../services/recordListServices.js";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -75,6 +77,27 @@ function HomePage() {
     showToast(`Moved "${record.albumtitle}" to your collection`);
   }
 
+  // delete a record from the collection / wantList AND all crates
+  // (asked for confirmation in ConfirmDeleteDialog; the Record row itself is kept)
+  async function handleDelete(id, record) {
+    const deletedLinks = await deleteRecordFromLists(id);
+    const listName = view === "wantlist" ? "wantlist" : "collection";
+    const crateCount = deletedLinks.length - 1; // all links except the collection/wantList one
+    const fromCrates =
+      crateCount > 0
+        ? ` and ${crateCount} ${crateCount === 1 ? "crate" : "crates"}`
+        : "";
+    showToast(`Deleted "${record.albumtitle}" from your ${listName}${fromCrates}`);
+  }
+
+  // remove a record from the current crate only (stays in the collection)
+  async function handleRemove(id, record) {
+    await removeFromRecordList(id, selectedCrate.get("list_id"));
+    showToast(
+      `Removed "${record.albumtitle}" from "${selectedCrate.get("list_name")}"`,
+    );
+  }
+
   return (
     <Stack spacing={2}>
       <Typography variant="h1">
@@ -91,7 +114,10 @@ function HomePage() {
       ) : view === "crate" ? (
         <>
           <BackButton onClick={() => setView("home")} />
-          <RecordList listId={selectedCrate.get("list_id")} />
+          <RecordList
+            listId={selectedCrate.get("list_id")}
+            onRemove={handleRemove}
+          />
         </>
       ) : (
         <>
@@ -107,6 +133,7 @@ function HomePage() {
                 view === "wantlist" ? handleAddToCollection : undefined
               }
               onAddToCrate={view === "collection" ? openAddToCrate : undefined}
+              onDelete={handleDelete}
             />
           )}
           <AddToCrateDialog
