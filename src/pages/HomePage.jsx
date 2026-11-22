@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import RecordList from "../components/RecordList";
 import HomeView from "../components/HomeView.jsx";
 import BackButton from "../components/BackButton.jsx";
-import Toast from "../components/Toast.jsx";
+import { useToast } from "../hooks/useToast.js";
 import AddToCrateDialog from "./AddToCrateDialog.jsx";
 import {
   getCrates,
@@ -24,6 +24,7 @@ const titles = {
 
 function HomePage() {
   const navigate = useNavigate();
+  const showToast = useToast();
   const [view, setView] = useState("home");
   const [crates, setCrates] = useState([]);
   const [selectedCrate, setSelectedCrate] = useState(null);
@@ -31,7 +32,6 @@ function HomePage() {
   const [wantList, setWantList] = useState(null);
   const [listError, setListError] = useState(null);
   const [recordForCrate, setRecordForCrate] = useState(null); // record id while AddToCrateDialog is open
-  const [toastMessage, setToastMessage] = useState(null);
 
   // load the user's collection and wantList once
   useEffect(() => {
@@ -61,7 +61,6 @@ function HomePage() {
 
   // open AddToCrateDialog for a record in the collection
   function openAddToCrate(id) {
-    setToastMessage(null);
     setRecordForCrate(id);
   }
 
@@ -73,7 +72,7 @@ function HomePage() {
       wantList.get("list_id"),
       collection.get("list_id"),
     );
-    setToastMessage(`Moved "${record.albumtitle}" to your collection`);
+    showToast(`Moved "${record.albumtitle}" to your collection`);
   }
 
   return (
@@ -114,19 +113,12 @@ function HomePage() {
             recordId={recordForCrate}
             onClose={() => setRecordForCrate(null)}
             onAdded={(crate) => {
-              setToastMessage(`Added to "${crate.get("list_name")}"`);
+              showToast(`Added to "${crate.get("list_name")}"`);
               setRecordForCrate(null);
             }}
           />
         </>
       )}
-
-      {/* Confirmation after adding a record to a crate */}
-      <Toast
-        open={toastMessage !== null}
-        message={toastMessage}
-        onClose={() => setToastMessage(null)}
-      />
     </Stack>
   );
 }
