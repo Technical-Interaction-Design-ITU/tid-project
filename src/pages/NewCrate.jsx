@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { createRecordList } from "../services/recordListServices.js";
+import { useToast } from "../hooks/useToast.js";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Dialog from "@mui/material/Dialog";
@@ -16,6 +17,7 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 export default function NewCrate() {
   const navigate = useNavigate();
   const close = () => navigate("/");
+  const showToast = useToast();
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -24,9 +26,12 @@ export default function NewCrate() {
     setLoading(true);
     try {
       await createRecordList(name, "crate");
+      // The toast is global, so it stays visible after we navigate back home
+      showToast(`Crate "${name.trim()}" created`);
       close();
     } catch (err) {
       console.error(err);
+      showToast(`Could not create crate: ${err.message}`, "error");
     } finally {
       setLoading(false);
     }

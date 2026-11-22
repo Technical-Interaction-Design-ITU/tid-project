@@ -18,7 +18,7 @@ function toRecordProps(record) {
 }
 
 // Shows all records stored in the list with the given listId (via Stored_in)
-// onAddToCollection: moves a record out of this list (it is removed from the screen)
+// onAddToCollection(id, record): moves a record out of this list (it is removed from the screen)
 // onAddToCrate: adds a record to a crate as well (it stays in this list)
 function RecordList({ listId, onAddToCollection, onAddToCrate }) {
   const [records, setRecords] = useState([]);
@@ -30,7 +30,11 @@ function RecordList({ listId, onAddToCollection, onAddToCrate }) {
   async function handleAddToCollection(id) {
     setAddError(null);
     try {
-      await onAddToCollection(id);
+      // pass the record along, so the parent can use the album title in a confirmation
+      await onAddToCollection(
+        id,
+        records.find((r) => r.id === id),
+      );
       setRecords((prev) => prev.filter((r) => r.id !== id));
     } catch (err) {
       setAddError(err.message);

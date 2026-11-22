@@ -74,7 +74,7 @@ export default {
   MuiBottomNavigation: {
     styleOverrides: {
       root: ({ theme }) => ({
-        height: 64,
+        height: 64, // when changing changing, also update in top of the toast.jsx
         // Same width as the page container (the `sm` breakpoint), centred.
         maxWidth: theme.breakpoints.values.sm,
         marginInline: "auto",

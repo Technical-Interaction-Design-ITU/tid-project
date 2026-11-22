@@ -13,7 +13,7 @@ import Typography from "@mui/material/Typography";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import SearchBox from "../components/SearchBox.jsx";
 import Record from "../components/Record.jsx";
-import Toast from "../components/Toast.jsx";
+import { useToast } from "../hooks/useToast.js";
 import { newRecord } from "../services/recordServices.js";
 import { getCollection, getWantList } from "../services/recordListServices.js";
 
@@ -21,17 +21,16 @@ import { getCollection, getWantList } from "../services/recordListServices.js";
 export default function AddRecordPage() {
   const navigate = useNavigate();
   const close = () => navigate("/");
+  const showToast = useToast();
 
   const [selected, setSelected] = useState(null); // album chosen in the SearchBox
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
-  const [message, setMessage] = useState(null); // confirmation after saving
 
   // SearchBox gives us { id, artist, title, year, thumb, cover, ... }
   function handleSelect(album) {
     setSelected(album);
     setError(null);
-    setMessage(null);
   }
 
   function closeSelected() {
@@ -53,7 +52,7 @@ export default function AddRecordPage() {
         },
         list,
       );
-      setMessage(`Added "${selected.title}" to your ${listName}`);
+      showToast(`Added "${selected.title}" to your ${listName}`);
       setSelected(null);
     } catch (err) {
       setError(err.message);
@@ -79,13 +78,6 @@ export default function AddRecordPage() {
           <SearchBox onSelect={handleSelect} />
         </Stack>
       </Container>
-
-      {/* Confirmation toast after a record is saved */}
-      <Toast
-        open={message !== null}
-        message={message}
-        onClose={() => setMessage(null)}
-      />
 
       {/* Preview of the chosen album*/}
       <Dialog open={selected !== null} onClose={closeSelected}>
