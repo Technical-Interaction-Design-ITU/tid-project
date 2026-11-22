@@ -20,7 +20,6 @@ export default {
     styleOverrides: {
       root: { minHeight: 44, minWidth: 44, paddingInline: 20 },
     },
-    // <Button variant="dashed">: an "add something" slot with a dashed outline.
     variants: [
       // <PrimaryButton> (contained + large): the main action on a screen.
       {
@@ -30,6 +29,25 @@ export default {
           fontWeight: 700,
         },
       },
+      // <LabeledIconButton> (variant="labeledIcon"): icon with a short label underneath.
+      // Uses MUI's per-colour CSS variables, so color="secondary" / "error" just work.
+      {
+        props: { variant: "labeledIcon" },
+        style: {
+          flexShrink: 0,
+          flexDirection: "column",
+          gap: 2,
+          width: 76,
+          paddingInline: 4,
+          paddingBlock: 4,
+          fontSize: "0.75rem",
+          lineHeight: 1.2,
+          textTransform: "none",
+          color: "var(--variant-textColor)",
+          backgroundColor: "var(--variant-textBg)",
+        },
+      },
+      // <Button variant="dashed">: an "add something" slot with a dashed outline.
       {
         props: { variant: "dashed" },
         style: ({ theme }) => ({

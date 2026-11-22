@@ -1,16 +1,16 @@
 import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import AlbumRoundedIcon from "@mui/icons-material/AlbumRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import PlaylistAddRoundedIcon from "@mui/icons-material/PlaylistAddRounded";
+import LabeledIconButton from "./LabeledIconButton.jsx";
 
 const COVER = 88; // px
 
 function Record({ record, onAddToCollection, onAddToCrate }) {
   // Try cover first (Parse.File), fall back to cover_url (Discogs URL)
   let coverUrl = null;
-  
+
   if (typeof record.cover === "string") {
     coverUrl = record.cover;
   } else if (record.cover?.url) {
@@ -82,23 +82,21 @@ function Record({ record, onAddToCollection, onAddToCrate }) {
 
       {/* "add to collection" (handleAddToCollection), only shown in Wantlist view */}
       {onAddToCollection && (
-        <IconButton
-          color="secondary"
-          aria-label={`Add ${record.albumtitle} to collection`}
+        <LabeledIconButton
+          icon={<AddRoundedIcon />}
+          label="Add to collection"
+          ariaLabel={`Add to collection: ${record.albumtitle}`}
           onClick={() => onAddToCollection(record.id)}
-        >
-          <AddRoundedIcon />
-        </IconButton>
+        />
       )}
       {/* "add to crate" (opens AddToCrateDialog), only shown in Collection view */}
       {onAddToCrate && (
-        <IconButton
-          color="secondary"
-          aria-label={`Add ${record.albumtitle} to a crate`}
+        <LabeledIconButton
+          icon={<PlaylistAddRoundedIcon />}
+          label="Add to crate"
+          ariaLabel={`Add to crate: ${record.albumtitle}`}
           onClick={() => onAddToCrate(record.id)}
-        >
-          <PlaylistAddRoundedIcon />
-        </IconButton>
+        />
       )}
     </Box>
   );
