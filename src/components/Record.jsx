@@ -104,7 +104,7 @@ function Record({ record, onAddToCollection, onAddToCrate, onDelete, onRemove })
             onClick={() => onAddToCrate(record.id)}
           />
         )}
-        {/* "delete" (opens ConfirmDeleteDialog), shown in Wantlist and Collection view */}
+        {/* "delete" (asks first, in a ConfirmDialog), shown in Wantlist and Collection view */}
         {onDelete && (
           <LabeledIconButton
             icon={<DeleteRoundedIcon />}

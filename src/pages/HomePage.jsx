@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import RecordList from "../components/RecordList";
 import HomeView from "../components/HomeView.jsx";
 import BackButton from "../components/BackButton.jsx";
+import ConfirmDialog from "../components/ConfirmDialog.jsx";
 import { useToast } from "../hooks/useToast.js";
 import AddToCrateDialog from "./AddToCrateDialog.jsx";
 import {
@@ -13,6 +14,8 @@ import {
   moveToRecordList,
   deleteRecordFromLists,
   removeFromRecordList,
+  countRecordsInList,
+  deleteCrate,
 } from "../services/recordListServices.js";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -34,6 +37,10 @@ function HomePage() {
   const [wantList, setWantList] = useState(null);
   const [listError, setListError] = useState(null);
   const [recordForCrate, setRecordForCrate] = useState(null); // record id while AddToCrateDialog is open
+  // crate for the delete ConfirmDialog. Kept after closing, so the title
+  // doesn't flash "undefined" during the fade-out; crateDeleteOpen opens/closes it.
+  const [crateToDelete, setCrateToDelete] = useState(null);
+  const [crateDeleteOpen, setCrateDeleteOpen] = useState(false);
 
   // load the user's collection and wantList once
   useEffect(() => {
@@ -78,7 +85,7 @@ function HomePage() {
   }
 
   // delete a record from the collection / wantList AND all crates
-  // (asked for confirmation in ConfirmDeleteDialog; the Record row itself is kept)
+  // (asked for confirmation in RecordList's ConfirmDialog; the Record row itself is kept)
   async function handleDelete(id, record) {
     const deletedLinks = await deleteRecordFromLists(id);
     const listName = view === "wantlist" ? "wantlist" : "collection";
@@ -98,19 +105,52 @@ function HomePage() {
     );
   }
 
+  // open the delete ConfirmDialog for a crate (from its ⋮ menu on the home view)
+  function askDeleteCrate(crate) {
+    setCrateToDelete(crate);
+    setCrateDeleteOpen(true);
+  }
+
+  // dialog text, gets the record count from countRecordsInList
+  function deleteCrateMessage(count) {
+    if (count === 0) return "This can't be undone. The crate is empty.";
+    const records = count === 1 ? "record" : "records";
+    const stay = count === 1 ? "stays" : "stay";
+    return `This can't be undone. The ${count} ${records} in it ${stay} in your collection.`;
+  }
+
+  // called by ConfirmDialog; errors are shown in the dialog
+  async function confirmDeleteCrate() {
+    await deleteCrate(crateToDelete.get("list_id"));
+    setCrates((prev) => prev.filter((c) => c.id !== crateToDelete.id));
+    setCrateDeleteOpen(false);
+    showToast(`Deleted crate "${crateToDelete.get("list_name")}"`);
+  }
+
   return (
     <Stack spacing={2}>
       <Typography variant="h1">
         {view === "crate" ? selectedCrate.get("list_name") : titles[view]}
       </Typography>
       {view === "home" ? (
-        <HomeView
-          crates={crates}
-          onOpenCollection={() => setView("collection")}
-          onOpenWantlist={() => setView("wantlist")}
-          onOpenCrate={openCrate}
-          onNewCrate={() => navigate("/new-crate")}
-        />
+        <>
+          <HomeView
+            crates={crates}
+            onOpenCollection={() => setView("collection")}
+            onOpenWantlist={() => setView("wantlist")}
+            onOpenCrate={openCrate}
+            onNewCrate={() => navigate("/new-crate")}
+            onDeleteCrate={askDeleteCrate}
+          />
+          <ConfirmDialog
+            openKey={crateDeleteOpen ? crateToDelete.id : null}
+            title={`Delete crate "${crateToDelete?.get("list_name")}"?`}
+            load={() => countRecordsInList(crateToDelete.get("list_id"))}
+            message={deleteCrateMessage}
+            onCancel={() => setCrateDeleteOpen(false)}
+            onConfirm={confirmDeleteCrate}
+          />
+        </>
       ) : view === "crate" ? (
         <>
           <BackButton onClick={() => setView("home")} />

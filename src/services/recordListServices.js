@@ -147,6 +147,38 @@ export const removeFromRecordList = async (recordId, recordListId) => {
   return await link.destroy();
 };
 
+// Count the records in a list (its Stored_in rows), used by the delete crate dialog
+export const countRecordsInList = async (listId) => {
+  return await new Parse.Query(StoredIn)
+    .equalTo("record_list_id", listId)
+    .count();
+};
+
+// Delete one of the logged in user's crates (The records stay in the collection)
+// Links are deleted first, so if something fails halfway the user just sees
+// an empty crate (and can try again), instead of invisible, broken links.
+export const deleteCrate = async (listId) => {
+  const user = Parse.User.current();
+  if (!user) throw new Error("Must be logged in to delete a crate");
+
+  const crate = await new Parse.Query(RecordList)
+    .equalTo("user_id", user.id)
+    .equalTo("list_id", listId)
+    .first();
+  if (!crate) throw new Error(`Crate ${listId} not found`);
+  // safety net: never delete the collection or wantList
+  if (crate.get("type") !== "crate") {
+    throw new Error(`Only crates can be deleted, not a ${crate.get("type")}`);
+  }
+
+  const links = await new Parse.Query(StoredIn)
+    .equalTo("record_list_id", listId)
+    .limit(1000) // Parse returns max 100 rows by default
+    .find();
+  await Parse.Object.destroyAll(links);
+  return await crate.destroy();
+};
+
 // Create collection and wantList for new sign up
 // (Can be deleted at a later point)
 export const createDefaultRecordLists = async () => {
