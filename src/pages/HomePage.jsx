@@ -31,7 +31,7 @@ function HomePage() {
   const [wantList, setWantList] = useState(null);
   const [listError, setListError] = useState(null);
   const [recordForCrate, setRecordForCrate] = useState(null); // record id while AddToCrateDialog is open
-  const [crateMessage, setCrateMessage] = useState(null);
+  const [toastMessage, setToastMessage] = useState(null);
 
   // load the user's collection and wantList once
   useEffect(() => {
@@ -61,18 +61,19 @@ function HomePage() {
 
   // open AddToCrateDialog for a record in the collection
   function openAddToCrate(id) {
-    setCrateMessage(null);
+    setToastMessage(null);
     setRecordForCrate(id);
   }
 
   // move a record from the wantList to the collection
   // (RecordList removes it from the screen once this resolves)
-  async function handleAddToCollection(id) {
+  async function handleAddToCollection(id, record) {
     await moveToRecordList(
       id,
       wantList.get("list_id"),
       collection.get("list_id"),
     );
+    setToastMessage(`Moved "${record.albumtitle}" to your collection`);
   }
 
   return (
@@ -113,7 +114,7 @@ function HomePage() {
             recordId={recordForCrate}
             onClose={() => setRecordForCrate(null)}
             onAdded={(crate) => {
-              setCrateMessage(`Added to "${crate.get("list_name")}"`);
+              setToastMessage(`Added to "${crate.get("list_name")}"`);
               setRecordForCrate(null);
             }}
           />
@@ -122,9 +123,9 @@ function HomePage() {
 
       {/* Confirmation after adding a record to a crate */}
       <Toast
-        open={crateMessage !== null}
-        message={crateMessage}
-        onClose={() => setCrateMessage(null)}
+        open={toastMessage !== null}
+        message={toastMessage}
+        onClose={() => setToastMessage(null)}
       />
     </Stack>
   );
