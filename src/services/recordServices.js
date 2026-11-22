@@ -29,11 +29,9 @@ export const newRecord = async (recordData, recordList) => {
   record.setACL(acl);
   // Store cover URL - beforeSave hook will fetch and upload it as Parse.File
   if (recordData.cover) {
-    console.log("Setting cover URL:", recordData.cover);
     record.set("cover_url", recordData.cover);
   }
   record.set("release_year", recordData.releaseYear);
-  console.log("Saving record, beforeSave hook will handle cover upload");
   await record.save();
 
   // add it to recordList

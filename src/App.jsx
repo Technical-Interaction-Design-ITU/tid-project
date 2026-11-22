@@ -14,7 +14,7 @@ export default function App() {
   }
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Container sx={{ pt: 3, pb: 12 }}>
         <AppRoutes
           user={user}
