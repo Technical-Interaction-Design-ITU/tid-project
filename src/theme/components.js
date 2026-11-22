@@ -22,6 +22,14 @@ export default {
     },
     // <Button variant="dashed">: an "add something" slot with a dashed outline.
     variants: [
+      // <PrimaryButton> (contained + large): the main action on a screen.
+      {
+        props: { variant: "contained", size: "large" },
+        style: {
+          minHeight: 52,
+          fontWeight: 700,
+        },
+      },
       {
         props: { variant: "dashed" },
         style: ({ theme }) => ({

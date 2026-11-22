@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { createRecordList } from "../services/recordListServices.js";
 import { useToast } from "../hooks/useToast.js";
-import Button from "@mui/material/Button";
+import PrimaryButton from "../components/PrimaryButton.jsx";
 import Container from "@mui/material/Container";
 import Dialog from "@mui/material/Dialog";
 import IconButton from "@mui/material/IconButton";
@@ -58,13 +58,9 @@ export default function NewCrate() {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-            <Button
-              type="submit"
-              size="large"
-              disabled={loading || !name.trim()}
-            >
+            <PrimaryButton type="submit" disabled={loading || !name.trim()}>
               Create crate
-            </Button>
+            </PrimaryButton>
           </Stack>
         </Stack>
       </Container>

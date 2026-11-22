@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import Alert from "@mui/material/Alert";
-import Button from "@mui/material/Button";
+import PrimaryButton from "../components/PrimaryButton.jsx";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
@@ -51,9 +51,9 @@ export default function AuthPage({ onAuthenticated }) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Button type="submit" size="large" disabled={loading}>
+        <PrimaryButton type="submit" disabled={loading}>
           Log In
-        </Button>
+        </PrimaryButton>
       </Stack>
 
       <Typography color="text.secondary">

@@ -10,6 +10,7 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import AlbumRoundedIcon from "@mui/icons-material/AlbumRounded";
+import PrimaryButton from "./PrimaryButton.jsx";
 // Pure vibe code - for testing purposes
 // Album autocomplete. Calls onSelect(album) with a /api/search result ({ id, artist, title, year, thumb, cover, ... }).
 export default function SearchBox({ onSelect }) {
@@ -17,38 +18,53 @@ export default function SearchBox({ onSelect }) {
   const [results, setResults] = useState([]);
   const [error, setError] = useState("");
 
+  const tooShort = q.trim().length < 2;
+
+  async function search(query, signal) {
+    try {
+      const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`, {
+        signal,
+      });
+      const body = await res.json();
+      if (!res.ok) throw new Error(body.error);
+      setResults(body);
+      setError("");
+    } catch (e) {
+      if (e.name !== "AbortError") setError(e.message);
+    }
+  }
+
+  // Live search while typing, debounced: Discogs allows 25-60 req/min
   useEffect(() => {
     if (q.trim().length < 2) return;
     const ctrl = new AbortController();
-    const t = setTimeout(async () => {
-      // debounce: Discogs allows 25-60 req/min
-      try {
-        const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`, {
-          signal: ctrl.signal,
-        });
-        const body = await res.json();
-        if (!res.ok) throw new Error(body.error);
-        setResults(body);
-        setError("");
-      } catch (e) {
-        if (e.name !== "AbortError") setError(e.message);
-      }
-    }, 300);
+    const t = setTimeout(() => search(q, ctrl.signal), 300);
     return () => {
       clearTimeout(t);
       ctrl.abort();
     };
   }, [q]);
 
-  const shown = q.trim().length < 2 ? [] : results;
+  // Search button / Enter: search right away instead of waiting for the debounce
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!tooShort) search(q);
+  }
+
+  const shown = tooShort ? [] : results;
 
   return (
     <Stack spacing={2}>
-      <TextField
-        label="Search albums or artists"
-        value={q}
-        onChange={(e) => setQ(e.target.value)}
-      />
+      <Stack component="form" onSubmit={handleSubmit} spacing={2}>
+        <TextField
+          label="Search albums or artists"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+        />
+        <PrimaryButton type="submit" disabled={tooShort}>
+          Search
+        </PrimaryButton>
+      </Stack>
       {error && <Alert severity="error">{error}</Alert>}
       {shown.length > 0 && (
         <Paper variant="outlined" sx={{ maxHeight: 400, overflowY: "auto" }}>
