@@ -3,8 +3,11 @@ import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Record from "./Record.jsx";
-import ConfirmDeleteDialog from "./ConfirmDeleteDialog.jsx";
-import { getRecordsInList } from "../services/recordListServices.js";
+import ConfirmDialog from "./ConfirmDialog.jsx";
+import {
+  getRecordsInList,
+  getCratesForRecord,
+} from "../services/recordListServices.js";
 
 // Turn a Parse Record object into the shape the Record component expects
 function toRecordProps(record) {
@@ -21,14 +24,22 @@ function toRecordProps(record) {
 // Shows all records stored in the list with the given listId (via Stored_in)
 // onAddToCollection(id, record): moves a record out of this list 
 // onAddToCrate: adds a record to a crate as well (it stays in this list)
-// onDelete(id, record): deletes a record from all lists, after ConfirmDeleteDialog
+// onDelete(id, record): deletes a record from all lists, after ConfirmDialog
 // onRemove(id, record): removes a record from this list only, no confirmation
 function RecordList({ listId, onAddToCollection, onAddToCrate, onDelete, onRemove }) {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [actionError, setActionError] = useState(null);
-  const [recordToDelete, setRecordToDelete] = useState(null); // record while ConfirmDeleteDialog is open
+  // record for the delete ConfirmDialog. Kept after closing, so the title
+  // doesn't flash "undefined" during the fade-out; deleteOpen opens/closes it.
+  const [recordToDelete, setRecordToDelete] = useState(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+  function askDelete(id) {
+    setRecordToDelete(findRecord(id));
+    setDeleteOpen(true);
+  }
 
   const findRecord = (id) => records.find((r) => r.id === id);
   const removeFromScreen = (id) =>
@@ -47,11 +58,19 @@ function RecordList({ listId, onAddToCollection, onAddToCrate, onDelete, onRemov
     }
   }
 
-  // called by ConfirmDeleteDialog; errors are shown in the dialog
+  // called by ConfirmDialog; errors are shown in the dialog
   async function confirmDelete() {
     await onDelete(recordToDelete.id, recordToDelete);
     removeFromScreen(recordToDelete.id);
-    setRecordToDelete(null);
+    setDeleteOpen(false);
+  }
+
+  // dialog text: warn if the record is also in crates, since they lose it too
+  function deleteMessage(crates) {
+    if (!crates?.length) return "This can't be undone.";
+    const names = crates.map((c) => `"${c.get("list_name")}"`).join(", ");
+    const word = crates.length === 1 ? "crate" : "crates";
+    return `This can't be undone. Deleting this also deletes the record from your ${word} ${names}.`;
   }
 
   useEffect(() => {
@@ -114,17 +133,18 @@ function RecordList({ listId, onAddToCollection, onAddToCrate, onDelete, onRemov
                 : undefined
             }
             onAddToCrate={onAddToCrate}
-            onDelete={
-              onDelete ? (id) => setRecordToDelete(findRecord(id)) : undefined
-            }
+            onDelete={onDelete ? askDelete : undefined}
             onRemove={onRemove ? (id) => runAndRemove(onRemove, id) : undefined}
           />
         ))}
       </Box>
       {onDelete && (
-        <ConfirmDeleteDialog
-          record={recordToDelete}
-          onCancel={() => setRecordToDelete(null)}
+        <ConfirmDialog
+          openKey={deleteOpen ? recordToDelete.id : null}
+          title={`Delete "${recordToDelete?.albumtitle}"?`}
+          load={() => getCratesForRecord(recordToDelete.id)}
+          message={deleteMessage}
+          onCancel={() => setDeleteOpen(false)}
           onConfirm={confirmDelete}
         />
       )}

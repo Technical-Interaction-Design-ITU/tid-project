@@ -13,6 +13,7 @@ export default function HomeView({
   onOpenWantlist,
   onOpenCrate,
   onNewCrate,
+  onDeleteCrate,
 }) {
   return (
     <Stack spacing={2}>
@@ -38,6 +39,7 @@ export default function HomeView({
           key={crate.id}
           title={crate.get("list_name")}
           onClick={() => onOpenCrate(crate)}
+          onDelete={() => onDeleteCrate(crate)}
         />
       ))}
     </Stack>
