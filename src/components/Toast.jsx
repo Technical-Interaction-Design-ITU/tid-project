@@ -2,7 +2,8 @@ import { useState } from "react";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 
-// Reusable confirmation toast: an Alert shown inside a Snackbar.
+// Reusable confirmation toast:
+// an Alert shown inside a Snackbar (both are mui components).
 export default function Toast({
   open,
   message,

@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import RecordList from "../components/RecordList";
 import HomeView from "../components/HomeView.jsx";
 import BackButton from "../components/BackButton.jsx";
+import Toast from "../components/Toast.jsx";
 import AddToCrateDialog from "./AddToCrateDialog.jsx";
 import {
   getCrates,
@@ -108,7 +109,6 @@ function HomePage() {
               onAddToCrate={view === "collection" ? openAddToCrate : undefined}
             />
           )}
-          {crateMessage && <Alert severity="success">{crateMessage}</Alert>}
           <AddToCrateDialog
             recordId={recordForCrate}
             onClose={() => setRecordForCrate(null)}
@@ -119,6 +119,13 @@ function HomePage() {
           />
         </>
       )}
+
+      {/* Confirmation after adding a record to a crate */}
+      <Toast
+        open={crateMessage !== null}
+        message={crateMessage}
+        onClose={() => setCrateMessage(null)}
+      />
     </Stack>
   );
 }
