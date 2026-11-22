@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Alert from "@mui/material/Alert";
 import Avatar from "@mui/material/Avatar";
+import CircularProgress from "@mui/material/CircularProgress";
+import InputAdornment from "@mui/material/InputAdornment";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
@@ -17,10 +19,17 @@ export default function SearchBox({ onSelect }) {
   const [q, setQ] = useState("");
   const [results, setResults] = useState([]);
   const [error, setError] = useState("");
+  // "live" = debounced search while typing, "submit" = Search button / Enter
+  const [loading, setLoading] = useState(null);
+  // only the newest request may clear the spinner, so an older one finishing
+  // early doesn't hide it while the newest is still running
+  const latestRequest = useRef(0);
 
   const tooShort = q.trim().length < 2;
 
-  async function search(query, signal) {
+  async function search(query, signal, source) {
+    const requestId = ++latestRequest.current;
+    setLoading(source);
     try {
       const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`, {
         signal,
@@ -31,6 +40,8 @@ export default function SearchBox({ onSelect }) {
       setError("");
     } catch (e) {
       if (e.name !== "AbortError") setError(e.message);
+    } finally {
+      if (requestId === latestRequest.current) setLoading(null);
     }
   }
 
@@ -38,7 +49,7 @@ export default function SearchBox({ onSelect }) {
   useEffect(() => {
     if (q.trim().length < 2) return;
     const ctrl = new AbortController();
-    const t = setTimeout(() => search(q, ctrl.signal), 300);
+    const t = setTimeout(() => search(q, ctrl.signal, "live"), 300);
     return () => {
       clearTimeout(t);
       ctrl.abort();
@@ -48,10 +59,11 @@ export default function SearchBox({ onSelect }) {
   // Search button / Enter: search right away instead of waiting for the debounce
   function handleSubmit(e) {
     e.preventDefault();
-    if (!tooShort) search(q);
+    if (!tooShort) search(q, undefined, "submit");
   }
 
   const shown = tooShort ? [] : results;
+  const searching = tooShort ? null : loading;
 
   return (
     <Stack spacing={2}>
@@ -60,8 +72,22 @@ export default function SearchBox({ onSelect }) {
           label="Search albums or artists"
           value={q}
           onChange={(e) => setQ(e.target.value)}
+          slotProps={{
+            input: {
+              endAdornment: searching && (
+                <InputAdornment position="end">
+                  <CircularProgress size={20} aria-label="Searching" />
+                </InputAdornment>
+              ),
+            },
+          }}
         />
-        <PrimaryButton type="submit" disabled={tooShort}>
+        <PrimaryButton
+          type="submit"
+          disabled={tooShort}
+          loading={searching === "submit"}
+          loadingIndicator={<CircularProgress size={22} color="inherit" />}
+        >
           Search
         </PrimaryButton>
       </Stack>

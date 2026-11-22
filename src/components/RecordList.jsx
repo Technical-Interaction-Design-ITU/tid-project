@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Record from "./Record.jsx";
 import ConfirmDialog from "./ConfirmDialog.jsx";
@@ -101,7 +102,11 @@ function RecordList({ listId, onAddToCollection, onAddToCrate, onDelete, onRemov
       <Typography color="text.secondary">No records in this list yet.</Typography>
     );
   if (loading)
-    return <Typography color="text.secondary">Loading records...</Typography>;
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+        <CircularProgress aria-label="Loading records" />
+      </Box>
+    );
   if (error)
     return <Alert severity="error">Could not load records: {error}</Alert>;
   if (records.length === 0)
