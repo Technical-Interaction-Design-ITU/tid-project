@@ -1,4 +1,19 @@
-// Parse Cloud Functions for tid-project
+// Parse Cloud Functions for tid-project (CommonJS on Back4App; Parse is a global there)
+/* global Parse, require */
+const { searchAlbums, getCover } = require("./discogs.cjs");
+
+// Album search. DISCOGS_TOKEN is set in Back4App: Server Settings -> Environment Variables.
+// Frontend: Parse.Cloud.run("searchAlbums", { q })
+Parse.Cloud.define("searchAlbums", async (request) =>
+  searchAlbums(String(request.params.q ?? "")),
+);
+
+// Better cover for a search result. Frontend: Parse.Cloud.run("getCover", { id, cover })
+Parse.Cloud.define("getCover", async (request) => {
+  const { id, cover } = request.params;
+  if (!/^\d+$/.test(String(id))) throw new Parse.Error(Parse.Error.INVALID_QUERY, "id must be a Discogs master id");
+  return getCover({ id, cover: cover || null });
+});
 
 // beforeSave hook: when a Record is saved with a cover URL, fetch and upload the image
 Parse.Cloud.beforeSave("Record", async (request) => {
@@ -24,7 +39,7 @@ Parse.Cloud.beforeSave("Record", async (request) => {
       await coverFile.save();
 
       // Replace the URL with the actual Parse.File object
-      record.set("cover", parseFile);
+      record.set("cover", coverFile);
       console.log("beforeSave: Image uploaded, Parse.File set on record");
     } catch (error) {
       console.error("beforeSave: Could not fetch and upload image:", error);
@@ -33,4 +48,6 @@ Parse.Cloud.beforeSave("Record", async (request) => {
     }
   }
 });
+
+Parse.Cloud.define()
 

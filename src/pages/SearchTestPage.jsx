@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import SearchBox from '../components/SearchBox.jsx'
+import Parse from '../services/parse.js'
 
 // Test page: pick an album, then look up its better cover (MusicBrainz, Discogs fallback).
 export default function SearchTestPage() {
@@ -9,8 +10,7 @@ export default function SearchTestPage() {
   async function pick(a) {
     setAlbum(a)
     setCover(null)
-    const params = new URLSearchParams({ id: a.id, cover: a.cover ?? '' })
-    setCover((await (await fetch(`/api/cover?${params}`)).json()).url)
+    setCover(await Parse.Cloud.run('getCover', { id: a.id, cover: a.cover }))
   }
 
   return (
