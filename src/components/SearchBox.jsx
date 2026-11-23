@@ -11,8 +11,9 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import AlbumRoundedIcon from "@mui/icons-material/AlbumRounded";
 import PrimaryButton from "./PrimaryButton.jsx";
+import Parse from "../services/parse.js";
 // Pure vibe code - for testing purposes
-// Album autocomplete. Calls onSelect(album) with a /api/search result ({ id, artist, title, year, thumb, cover, ... }).
+// Album autocomplete. Calls onSelect(album) with a searchAlbums Cloud Function result ({ id, artist, title, year, thumb, cover, ... }).
 export default function SearchBox({ onSelect }) {
   const [q, setQ] = useState("");
   const [results, setResults] = useState([]);
@@ -22,15 +23,14 @@ export default function SearchBox({ onSelect }) {
 
   async function search(query, signal) {
     try {
-      const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`, {
-        signal,
-      });
-      const body = await res.json();
-      if (!res.ok) throw new Error(body.error);
+      // Cloud Function (cloud/main.js) so the Discogs token stays server-side.
+      // Parse.Cloud.run can't be aborted, so drop the result if the query changed meanwhile.
+      const body = await Parse.Cloud.run("searchAlbums", { q: query });
+      if (signal?.aborted) return;
       setResults(body);
       setError("");
     } catch (e) {
-      if (e.name !== "AbortError") setError(e.message);
+      if (!signal?.aborted) setError(e.message);
     }
   }
 

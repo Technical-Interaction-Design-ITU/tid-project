@@ -27,6 +27,11 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
+      # VITE_PARSE_KEYS secret = the three VITE_PARSE_* lines from .env.local.
+      # They end up in the public bundle; DISCOGS_TOKEN is NOT here, it lives in Back4App.
+      - run: printf '%s\n' "$PARSE_KEYS" > .env.production.local
+        env:
+          PARSE_KEYS: ${{ secrets.VITE_PARSE_KEYS }}
       - run: npm run build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
