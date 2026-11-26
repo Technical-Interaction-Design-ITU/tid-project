@@ -1,0 +1,41 @@
+name: Deploy Vite site
+
+on:
+  push:
+    branches: [dev]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      # VITE_PARSE_KEYS secret = the three VITE_PARSE_* lines from .env.local.
+      # They end up in the public bundle; DISCOGS_TOKEN is NOT here, it lives in Back4App.
+      - run: printf '%s\n' "$PARSE_KEYS" > .env.production.local
+        env:
+          PARSE_KEYS: ${{ secrets.VITE_PARSE_KEYS }}
+      - run: npm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - id: deployment
+        uses: actions/deploy-pages@v4
