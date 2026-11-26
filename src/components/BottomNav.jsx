@@ -7,14 +7,19 @@ import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 
 export default function BottomNav() {
   const location = useLocation();
+  // every page except Add and Profile belongs to the Home tab
+  // (e.g. /collection, /wantlist, /crates/..., /new-crate)
+  const tab = ["/add", "/profile"].includes(location.pathname)
+    ? location.pathname
+    : "/";
 
   return (
     <BottomNavigation
       sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
-      value={location.pathname}
+      value={tab}
     >
       <BottomNavigationAction
-        label="Collection"
+        label="Home"
         value="/"
         icon={<AlbumRoundedIcon />}
         component={Link}

@@ -6,6 +6,8 @@ import SearchTestPage from "./pages/SearchTestPage.jsx";
 import AuthPage from "./pages/AuthPage.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
 import NewCrate from "./pages/NewCrate.jsx";
+import ListPage from "./pages/ListPage.jsx";
+import CratePage from "./pages/CratePage.jsx";
 
 function NotFound() {
   return (
@@ -18,12 +20,22 @@ function NotFound() {
 export default function AppRoutes({ user, onAuthenticated, onLogOut }) {
   // Pages that need a login: show the page if logged in, otherwise go to /auth.
   const requireUser = (page) => (user ? page : <Navigate to="/auth" replace />);
-  // Login/sign-up pages: once logged in, go to the collection instead.
+  // Login/sign-up pages: once logged in, go to Home instead.
   const guestOnly = (page) => (user ? <Navigate to="/" replace /> : page);
 
   return (
     <Routes>
       <Route path="/" element={requireUser(<HomePage />)} />
+      {/* key: so React doesn't reuse one ListPage (and its state) for both lists */}
+      <Route
+        path="/collection"
+        element={requireUser(<ListPage key="collection" kind="collection" />)}
+      />
+      <Route
+        path="/wantlist"
+        element={requireUser(<ListPage key="wantlist" kind="wantlist" />)}
+      />
+      <Route path="/crates/:listId" element={requireUser(<CratePage />)} />
       <Route path="/add" element={requireUser(<AddRecord />)} />
       <Route path="/new-crate" element={requireUser(<NewCrate />)} />
       <Route

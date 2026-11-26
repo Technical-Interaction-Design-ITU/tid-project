@@ -37,6 +37,21 @@ export const getCrates = async () => {
     .find();
 };
 
+// Get one of the logged in user's crates by its list_id (used by the crate page,
+// which only has the list_id from the URL)
+export const getCrate = async (listId) => {
+  const user = Parse.User.current();
+  if (!user) throw new Error("Must be logged in to read record lists");
+
+  const crate = await new Parse.Query(RecordList)
+    .equalTo("user_id", user.id)
+    .equalTo("type", "crate")
+    .equalTo("list_id", listId)
+    .first();
+  if (!crate) throw new Error("Crate not found");
+  return crate;
+};
+
 // Get the logged in user's collection (each user has exactly one)
 export const getCollection = () => getDefaultList("collection");
 
